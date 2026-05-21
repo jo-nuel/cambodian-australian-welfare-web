@@ -1,0 +1,280 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block title %}{{ page.title }} | CAWC NSW{% endblock %}
+
+{% block content %}
+
+<section class="bg-[linear-gradient(160deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-16 pt-14 sm:px-6 lg:px-8 lg:pb-20 lg:pt-20">
+        <p class="cawc-eyebrow-light">
+            Organisation Documents
+        </p>
+        <h1 class="mt-5 text-[3rem] font-black leading-[0.95] tracking-[-0.05em] text-white sm:text-[4rem] lg:text-[5rem]">
+            Resources
+        </h1>
+        {% if page.intro %}
+            <p class="mt-6 max-w-[680px] text-[17px] leading-[1.75] text-white/70">
+                {{ page.intro }}
+            </p>
+        {% endif %}
+    </div>
+</section>
+
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-12 sm:px-6 lg:px-8">
+        <div class="rounded-[28px] bg-[var(--cawc-surface)] px-6 py-6 shadow-[0_18px_50px_-30px_rgba(15,41,34,0.35)] sm:px-8 lg:flex lg:items-center lg:justify-between lg:gap-8">
+            <div>
+                <p class="cawc-eyebrow">
+                    Email required before access
+                </p>
+                <h2 class="mt-2 text-[1.6rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)]">
+                    Request a resource link
+                </h2>
+                <p class="mt-2 max-w-[700px] text-[15px] leading-[1.75] text-[var(--cawc-copy)]">
+                    To help CAWC understand community interest in its documents and support links, visitors are asked
+                    to provide an email address before opening a downloadable resource.
+                </p>
+            </div>
+            <div class="mt-5 rounded-2xl bg-[var(--cawc-surface-soft)] px-5 py-4 text-[13px] leading-[1.6] text-[var(--cawc-copy)] lg:mt-0 lg:w-[300px]">
+                Your email is recorded with the selected resource so the team can follow up or report resource demand.
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if reports %}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-16 sm:px-6 lg:px-8 lg:pb-20">
+        <div class="mb-9 flex items-end justify-between gap-4">
+            <div>
+                <p class="cawc-eyebrow">
+                    Past AGMs
+                </p>
+                <h2 class="mt-2 text-[2rem] font-black tracking-[-0.045em] text-[var(--cawc-heading)]">
+                    Annual Reports
+                </h2>
+            </div>
+            {% if oldest_year and newest_year %}
+                <span class="hidden text-[12px] font-semibold text-[var(--cawc-copy)] sm:inline">
+                    Archive: {{ newest_year }}-{{ oldest_year }}
+                </span>
+            {% endif %}
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {% for report in reports %}
+                <article class="flex min-h-[210px] flex-col rounded-[24px] bg-[var(--cawc-surface)] p-6 shadow-[0_12px_34px_-26px_rgba(15,41,34,0.35)]">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--cawc-surface-soft)] text-[var(--cawc-green)]">
+                            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                                <path d="M14 2v6h6M9 13h6M9 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                            </svg>
+                        </div>
+                        <p class="text-[2rem] font-black leading-none tracking-[-0.05em] text-[var(--cawc-heading)]">
+                            {{ report.year }}
+                        </p>
+                    </div>
+                    <h3 class="mt-5 text-[1.15rem] font-bold text-[var(--cawc-heading)]">
+                        Annual Report {{ report.year }}
+                    </h3>
+                    <p class="mt-2 flex-1 text-[14px] leading-[1.65] text-[var(--cawc-copy)]">
+                        Organisational report covering programs, governance, and annual activity.
+                    </p>
+                    {% if report.url %}
+                        <button type="button"
+                                data-resource-open
+                                data-download-url="{% url 'resource_download' 'annual-report' report.id %}"
+                                data-resource-title="Annual Report {{ report.year }}"
+                                class="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-[var(--cawc-green)] px-5 text-[13px] font-semibold text-white transition hover:bg-[var(--cawc-green-strong)]">
+                            Request download
+                        </button>
+                    {% else %}
+                        <span class="mt-5 inline-flex h-11 items-center justify-center rounded-full bg-[var(--cawc-surface-soft)] px-5 text-[13px] font-semibold text-[var(--cawc-copy)]/60">
+                            Coming soon
+                        </span>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if publications %}
+<section class="bg-[var(--cawc-surface-soft)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div class="mb-9">
+            <p class="cawc-eyebrow">
+                Downloads
+            </p>
+            <h2 class="mt-2 text-[2rem] font-black tracking-[-0.045em] text-[var(--cawc-heading)]">
+                Community Publications
+            </h2>
+        </div>
+
+        <div class="space-y-3">
+            {% for pub in publications %}
+                <article class="rounded-[22px] bg-[var(--cawc-surface)] px-6 py-5 shadow-[0_8px_28px_-24px_rgba(15,41,34,0.32)] sm:flex sm:items-center sm:justify-between sm:gap-6">
+                    <div class="min-w-0">
+                        {% if pub.category %}
+                            <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cawc-green)]">
+                                {{ pub.category }}
+                            </p>
+                        {% endif %}
+                        <h3 class="mt-1 text-[16px] font-bold text-[var(--cawc-heading)]">
+                            {{ pub.title }}
+                        </h3>
+                    </div>
+                    {% if pub.url %}
+                        <button type="button"
+                                data-resource-open
+                                data-download-url="{% url 'resource_download' 'publication' pub.id %}"
+                                data-resource-title="{{ pub.title }}"
+                                class="mt-4 inline-flex h-10 shrink-0 items-center justify-center rounded-full border border-[var(--cawc-border)]/50 px-5 text-[12px] font-semibold text-[var(--cawc-green)] transition hover:bg-[var(--cawc-surface-soft)] sm:mt-0">
+                            Request access
+                        </button>
+                    {% else %}
+                        <span class="mt-4 inline-flex h-10 shrink-0 items-center justify-center rounded-full bg-[var(--cawc-surface-soft)] px-5 text-[12px] font-semibold text-[var(--cawc-copy)]/60 sm:mt-0">
+                            Coming soon
+                        </span>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% if useful_links %}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div class="mb-9">
+            <p class="cawc-eyebrow">
+                Useful Links
+            </p>
+            <h2 class="mt-2 text-[2rem] font-black tracking-[-0.045em] text-[var(--cawc-heading)]">
+                Community Support Links
+            </h2>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {% for link in useful_links %}
+                <article class="flex min-h-[190px] flex-col rounded-[24px] bg-[var(--cawc-surface)] p-6 shadow-[0_12px_34px_-26px_rgba(15,41,34,0.35)]">
+                    {% if link.category %}
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cawc-green)]">
+                            {{ link.category }}
+                        </p>
+                    {% endif %}
+                    <h3 class="mt-2 text-[17px] font-bold leading-snug text-[var(--cawc-heading)]">
+                        {{ link.title }}
+                    </h3>
+                    {% if link.description %}
+                        <p class="mt-2 flex-1 text-[14px] leading-[1.65] text-[var(--cawc-copy)]">
+                            {{ link.description }}
+                        </p>
+                    {% else %}
+                        <div class="flex-1"></div>
+                    {% endif %}
+                    <button type="button"
+                            data-resource-open
+                            data-download-url="{% url 'resource_download' 'useful-link' link.id %}"
+                            data-resource-title="{{ link.title }}"
+                            class="mt-5 inline-flex h-10 items-center justify-center rounded-full border border-[var(--cawc-border)]/50 px-5 text-[12px] font-semibold text-[var(--cawc-green)] transition hover:bg-[var(--cawc-surface-soft)]">
+                        Open link
+                    </button>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<div id="resource-modal"
+     class="fixed inset-0 z-[220] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="resource-modal-title">
+    <div id="resource-backdrop" class="absolute inset-0 bg-[rgba(10,25,20,0.62)] backdrop-blur-sm"></div>
+    <form id="resource-form" method="post" class="relative w-full max-w-[480px] overflow-hidden rounded-[28px] bg-white shadow-[0_40px_90px_-24px_rgba(10,25,20,0.48)]">
+        {% csrf_token %}
+        <div class="bg-[linear-gradient(135deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)] px-7 py-6">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="cawc-eyebrow-light">
+                        Resource access
+                    </p>
+                    <h2 id="resource-modal-title" class="mt-1 text-[1.45rem] font-black tracking-[-0.04em] text-white">
+                        Enter your email
+                    </h2>
+                </div>
+                <button id="resource-modal-close" type="button" aria-label="Close"
+                        class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div class="px-7 py-6">
+            <p class="text-[14px] leading-[1.7] text-[var(--cawc-copy)]">
+                You are requesting:
+                <strong id="resource-title" class="font-semibold text-[var(--cawc-heading)]"></strong>
+            </p>
+            <label for="resource-email" class="mt-5 block text-[12px] font-semibold uppercase tracking-[0.18em] text-[var(--cawc-green)]">
+                Email address
+            </label>
+            <input id="resource-email"
+                   name="email"
+                   type="email"
+                   required
+                   autocomplete="email"
+                   class="mt-2 h-12 w-full rounded-2xl border border-[var(--cawc-border)]/60 bg-white px-4 text-[15px] text-[var(--cawc-heading)] outline-none transition focus:border-[var(--cawc-green)] focus:ring-4 focus:ring-[rgba(31,122,94,0.12)]"
+                   placeholder="you@example.com">
+            <button type="submit"
+                    class="mt-5 inline-flex h-12 w-full items-center justify-center rounded-full bg-[var(--cawc-green)] px-6 text-[14px] font-semibold text-white transition hover:bg-[var(--cawc-green-strong)]">
+                Continue to resource
+            </button>
+            <p class="mt-3 text-center text-[12px] leading-[1.6] text-[var(--cawc-copy)]/70">
+                Your email will be stored with the selected resource request.
+            </p>
+        </div>
+    </form>
+</div>
+
+<script>
+(function () {
+    var modal = document.getElementById('resource-modal');
+    var form = document.getElementById('resource-form');
+    var title = document.getElementById('resource-title');
+    var email = document.getElementById('resource-email');
+    var closeBtn = document.getElementById('resource-modal-close');
+    var backdrop = document.getElementById('resource-backdrop');
+    if (!modal || !form) return;
+
+    function openModal(button) {
+        form.action = button.dataset.downloadUrl || '';
+        title.textContent = button.dataset.resourceTitle || 'this resource';
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = 'hidden';
+        window.setTimeout(function () { email.focus(); }, 60);
+    }
+
+    function closeModal() {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('[data-resource-open]').forEach(function (button) {
+        button.addEventListener('click', function () { openModal(button); });
+    });
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape') closeModal();
+    });
+})();
+</script>
+
+{% endblock %}

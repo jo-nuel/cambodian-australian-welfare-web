@@ -1,0 +1,621 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block title %}CAWC NSW — Cambodian Community Support{% endblock %}
+{% block og_title %}CAWC NSW — Cambodian Community Support{% endblock %}
+{% block og_description %}{% if page.search_description %}{{ page.search_description }}{% else %}Supporting Cambodian and multicultural families across NSW through advocacy, programs, events, and community connection since 1983.{% endif %}{% endblock %}
+
+{% block extra_head %}
+<style>
+    .home-hero-layout {
+        display: grid;
+        gap: 3rem;
+    }
+    .home-hero-copy {
+        max-width: 700px;
+    }
+    .home-hero-media {
+        position: relative;
+    }
+    .home-hero-frame {
+        overflow: hidden;
+        border-radius: 28px;
+        background: var(--cawc-green);
+        box-shadow: 0 20px 60px -12px rgba(15, 41, 34, 0.18);
+    }
+    .home-hero-aspect {
+        aspect-ratio: 4 / 3;
+    }
+    .hero-running-slide {
+        opacity: 0;
+        transition: opacity 700ms ease;
+        pointer-events: none;
+    }
+    .hero-running-slide.is-active {
+        opacity: 1;
+    }
+    @media (min-width: 640px) {
+        .home-hero-aspect {
+            aspect-ratio: 16 / 11;
+        }
+    }
+    @media (min-width: 1024px) {
+        .home-hero-layout {
+            grid-template-columns: minmax(0, 0.68fr) minmax(560px, 1.32fr);
+            align-items: center;
+            gap: 4.5rem;
+        }
+        .home-hero-copy {
+            max-width: 520px;
+        }
+        .home-hero-aspect {
+            aspect-ratio: 16 / 10;
+        }
+    }
+    @media (min-width: 1280px) {
+        .home-hero-layout {
+            grid-template-columns: minmax(0, 480px) minmax(760px, 1fr);
+        }
+        .home-hero-aspect {
+            aspect-ratio: 16 / 9;
+        }
+    }
+    @media (min-width: 1440px) {
+        .home-hero-layout {
+            grid-template-columns: minmax(0, 500px) minmax(840px, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 1. HERO                                                                     #}
+{# Background: --cawc-bg (pale mint). Split layout: text left, image right.   #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1440px] px-5 pb-20 pt-14 sm:px-6 lg:px-8 lg:pb-28 lg:pt-20">
+        <div class="home-hero-layout">
+
+            {# Text column #}
+            <div class="home-hero-copy">
+                <h1 class="text-[2.8rem] font-black leading-[0.9] tracking-[-0.05em] text-[var(--cawc-heading)] sm:text-[3.8rem] lg:text-[5.2rem] xl:text-[5.7rem]">
+                    {{ page.hero_display_title }}
+                </h1>
+
+                {% if page.hero_description %}
+                    <p class="mt-6 max-w-[620px] text-[19px] leading-[1.65] text-[var(--cawc-copy)]">
+                        {{ page.hero_description }}
+                    </p>
+                {% else %}
+                    <p class="mt-6 max-w-[620px] text-[19px] leading-[1.65] text-[var(--cawc-copy)]">
+                        {{ page.hero_display_description }}
+                    </p>
+                {% endif %}
+
+                <div class="mt-9 flex flex-wrap items-center gap-3">
+                    {% if page.primary_cta %}
+                        {% if "donate" in page.primary_cta.link or "donate" in page.primary_cta.text|lower %}
+                            <button type="button"
+                                    data-donate-open
+                                    class="cawc-donate-btn donate-btn-pulse"
+                                    style="height:52px;padding:0 32px;font-size:15px;">
+                                {{ page.primary_cta.text }}
+                            </button>
+                        {% else %}
+                            <a href="{{ page.primary_cta.link }}"
+                               class="cawc-donate-btn"
+                               style="height:52px;padding:0 32px;font-size:15px;">
+                                {{ page.primary_cta.text }}
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                    {% if page.secondary_cta %}
+                        <a href="{{ page.secondary_cta.link }}"
+                           style="display:inline-flex;height:52px;align-items:center;justify-content:center;border-radius:9999px;border:1px solid rgba(193,200,196,0.30);background:transparent;padding:0 32px;font-size:15px;font-weight:600;color:var(--cawc-green);text-decoration:none;transition:background 150ms;"
+                           onmouseover="this.style.background='#ffffff'" onmouseout="this.style.background='transparent'">
+                            {{ page.secondary_cta.text }}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Image column #}
+            <div class="home-hero-media">
+                <div class="home-hero-frame">
+                    <div class="home-hero-aspect">
+                        {% if page.hero_running_display %}
+                            <div class="relative h-full w-full" data-hero-running-display>
+                                {% for item in page.hero_running_display %}
+                                    <div class="hero-running-slide {% if forloop.first %}is-active{% endif %} absolute inset-0" data-hero-running-slide>
+                                        {% if item.kind == 'wagtail' %}
+                                            {% image item.image width-1800 class="h-full w-full object-cover" %}
+                                        {% else %}
+                                            <img src="{{ item.url }}" alt="{{ item.alt|default:'CAWC community photo' }}" class="h-full w-full object-cover">
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="flex h-full w-full items-center justify-center p-8">
+                                <p class="text-center text-[13px] text-white/50">Add images to the Home Page photo strip in Wagtail or place them in media/Photos of running display.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 2. INTRODUCTION                                                              #}
+{# Background: --cawc-surface (white). Centered text with richtext support.   #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[var(--cawc-surface)]">
+    <div class="mx-auto w-full max-w-[760px] px-5 py-16 text-center sm:px-6 lg:py-20">
+        <p class="cawc-eyebrow">About CAWC NSW</p>
+        <h2 class="mt-4 text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)] sm:text-[2.5rem]">
+            {{ page.intro_title_display }}
+        </h2>
+        <div class="mt-5 text-[18px] leading-[1.75] text-[var(--cawc-copy)] [&_p]:mb-4 [&_p:last-child]:mb-0">
+            {% if page.intro_text %}
+                {{ page.intro_text|richtext }}
+            {% else %}
+                <p>
+                    The Cambodian-Australian Welfare Council of NSW Inc. supports Cambodian families,
+                    seniors, women, children and newly arrived community members across New South Wales.
+                    Originally established in 1983 as Khmer Interagency, CAWC continues to promote
+                    wellbeing, cultural connection, access to services and participation in Australian
+                    community life.
+                </p>
+            {% endif %}
+        </div>
+        <a href="/about-us/"
+           class="mt-8 btn-secondary btn-md">
+            Learn about our work
+        </a>
+    </div>
+</section>
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 3. IMPACT STATS                                                              #}
+{# Background: --cawc-surface-soft (elevated pale mint). White stat cards.    #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[var(--cawc-surface-soft)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-14 sm:px-6 lg:px-8 lg:py-16">
+        <div class="grid gap-4 sm:grid-cols-3">
+            {% for stat in page.impact_stats_display %}
+                <div class="rounded-2xl bg-[var(--cawc-surface)] px-8 py-9 text-center shadow-[0_20px_50px_-12px_rgba(15,41,34,0.06)]">
+                    <p class="text-[2.6rem] font-black leading-none tracking-[-0.04em] text-[var(--cawc-green)] sm:text-[3rem] lg:text-[3.4rem]">
+                        {{ stat.value }}
+                    </p>
+                    <p class="mt-2 text-[15px] font-bold text-[var(--cawc-heading)]">{{ stat.label }}</p>
+                    {% if stat.description %}
+                        <p class="mt-1 text-[13px] leading-[1.55] text-[var(--cawc-copy)]">{{ stat.description }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <div class="mt-8 flex justify-center">
+            <a href="/impact/" class="btn-secondary btn-md">
+                See our impact
+            </a>
+        </div>
+    </div>
+</section>
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 4. FEATURED PROGRAMS                                                         #}
+{# Background: --cawc-bg. White cards with dark-green image placeholders.     #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+
+        <div class="text-center">
+            <p class="cawc-eyebrow">What We Do</p>
+            <h2 class="mt-3 text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)] sm:text-[2.5rem]">
+                Our Community Programs
+            </h2>
+            <p class="mx-auto mt-3 max-w-[580px] text-[17px] leading-[1.65] text-[var(--cawc-copy)]">
+                Culturally responsive services that support families, elders and individuals
+                across New South Wales.
+            </p>
+        </div>
+
+        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {% for program in page.featured_programs_display %}
+                <article class="flex flex-col overflow-hidden rounded-2xl bg-[var(--cawc-surface)] shadow-[0_20px_50px_-12px_rgba(15,41,34,0.07)]">
+
+                    {# Image area — gradient placeholder when no image set #}
+                    <div class="h-[190px] shrink-0 overflow-hidden bg-[linear-gradient(135deg,#1a3d32_0%,#0f2922_100%)]">
+                        {% if program.image %}
+                            {% image program.image width-600 class="h-full w-full object-cover opacity-90" %}
+                        {% else %}
+                            <div class="cawc-img-placeholder">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white">
+                                    <rect x="3" y="3" width="18" height="18" rx="3" stroke-width="1.5"/>
+                                    <circle cx="8.5" cy="8.5" r="1.5" stroke-width="1.5"/>
+                                    <path d="m21 15-5-5L5 21" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                <p>{{ program.title }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    {# Card body #}
+                    <div class="flex flex-1 flex-col p-7">
+                        {% if program.category %}
+                            <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cawc-green)]">
+                                {{ program.category }}
+                            </p>
+                        {% endif %}
+                        <h3 class="mt-2 text-[18px] font-bold leading-[1.3] text-[var(--cawc-heading)]">
+                            {{ program.title }}
+                        </h3>
+                        <p class="mt-3 flex-1 text-[14px] leading-[1.65] text-[var(--cawc-copy)]">
+                            {{ program.summary }}
+                        </p>
+                        {% if program.link %}
+                            <a href="{{ program.link }}"
+                               class="mt-5 inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--cawc-green)] transition hover:gap-2.5">
+                                Learn more
+                                <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2.2"
+                                          stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </a>
+                        {% endif %}
+                    </div>
+
+                </article>
+            {% endfor %}
+        </div>
+
+        <div class="mt-10 text-center">
+            <a href="/programs/"
+               class="btn-secondary btn-lg">
+                View all programs
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 6. DONATION / SUPPORT CTA                                                   #}
+{# Background: dark forest-green gradient. White text and semi-opaque cards.  #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{% if page.donation_steps_display %}
+<section class="bg-[linear-gradient(170deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)]" id="donate">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+
+        <div class="text-center text-white">
+            <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-white/50">Support CAWC</p>
+            <h2 class="mt-3 text-[2rem] font-black tracking-[-0.04em] sm:text-[2.5rem]">
+                {{ page.donation_section_title_display }}
+            </h2>
+            <p class="mx-auto mt-3 max-w-[620px] text-[17px] leading-[1.65] text-white/65">
+                {{ page.donation_description_display }}
+            </p>
+        </div>
+
+        <div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {% for step in page.donation_steps_display %}
+                <div class="rounded-2xl bg-white/[0.08] px-6 py-7 backdrop-blur-sm">
+                    <div class="flex h-9 w-9 items-center justify-center rounded-full bg-white/[0.15]">
+                        <svg class="h-4 w-4 text-white" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M12 6 7.5 8.57v5.86L12 17l4.5-2.57V8.57L12 6Z" fill="currentColor"/>
+                        </svg>
+                    </div>
+                    <h3 class="mt-4 text-[16px] font-bold leading-tight text-white">{{ step.title }}</h3>
+                    <p class="mt-2 text-[14px] leading-[1.6] text-white/60">{{ step.description }}</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-10 text-center">
+            <button type="button"
+                    data-donate-open
+                    class="inline-flex h-[52px] items-center justify-center rounded-full bg-white px-9 text-[15px] font-semibold text-[var(--cawc-green)] transition hover:scale-[1.02] hover:bg-[#f0f5f2]">
+                {{ page.donation_cta_display.text }}
+            </button>
+        </div>
+
+    </div>
+</section>
+{% endif %}
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 7. VOLUNTEER / GET INVOLVED CTA                                              #}
+{# Background: --cawc-bg. White card, split layout.                           #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[var(--cawc-bg)]" id="volunteer">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8">
+        <div class="overflow-hidden rounded-3xl bg-[var(--cawc-surface)] shadow-[0_20px_60px_-12px_rgba(15,41,34,0.09)] lg:grid lg:grid-cols-[1.1fr_0.9fr]">
+
+            {# Text column #}
+            <div class="flex flex-col justify-center px-8 py-10 sm:px-10 sm:py-12">
+                <p class="cawc-eyebrow">
+                    Volunteer With CAWC NSW
+                </p>
+                <h2 class="mt-3 text-[1.9rem] font-black tracking-[-0.03em] text-[var(--cawc-heading)] sm:text-[2.3rem]">
+                    {{ page.volunteer_cta_display.title }}
+                </h2>
+                <p class="mt-4 max-w-[460px] text-[17px] leading-[1.65] text-[var(--cawc-copy)]">
+                    {{ page.volunteer_cta_display.description }}
+                </p>
+                <div class="mt-7 flex flex-wrap gap-3">
+                    <a href="{{ page.volunteer_cta_display.link }}"
+                       class="btn-primary btn-lg">
+                        {{ page.volunteer_cta_display.text }}
+                    </a>
+                    <a href="/get-involved/"
+                       class="btn-secondary btn-lg">
+                        Learn More
+                    </a>
+                </div>
+            </div>
+
+            {# Image column — uses dedicated volunteer_image with hero fallback #}
+            <div class="h-[260px] overflow-hidden bg-[linear-gradient(135deg,#1a3d32_0%,#0f2922_100%)] lg:h-auto">
+                {% if page.volunteer_image_display %}
+                    {% image page.volunteer_image_display width-900 class="h-full w-full object-cover" %}
+                {% else %}
+                    <div class="flex h-full w-full items-end p-8">
+                        <p class="text-[11px] text-white/40">Add a volunteer image in Wagtail</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 8. FAQ PREVIEW                                                               #}
+{# Background: --cawc-surface-soft. White accordion card.                     #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{% if page.faq_items_display %}
+<section class="bg-[var(--cawc-surface-soft)]">
+    <div class="mx-auto w-full max-w-[840px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+
+        <div class="text-center">
+            <p class="cawc-eyebrow">Questions</p>
+            <h2 class="mt-3 text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)] sm:text-[2.5rem]">
+                Frequently Asked Questions
+            </h2>
+        </div>
+
+        <div class="mt-10 overflow-hidden rounded-2xl bg-[var(--cawc-surface)] shadow-[0_20px_50px_-12px_rgba(15,41,34,0.06)]" data-accordion>
+            {% for faq in page.faq_items_display %}
+                <div class="border-b border-[var(--cawc-border)]/20 last:border-b-0">
+                    <button type="button"
+                            class="cawc-accordion-btn"
+                            aria-expanded="false">
+                        <span>{{ faq.question }}</span>
+                        <span class="cawc-accordion-icon flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--cawc-surface-soft)] text-[18px] font-light text-[var(--cawc-copy)]">+</span>
+                    </button>
+                    <div class="cawc-accordion-body" aria-hidden="true">
+                        {% if faq.answer %}
+                            <div class="px-6 pb-5 text-[15px] leading-[1.75] text-[var(--cawc-copy)] [&_p]:mb-2 [&_p:last-child]:mb-0">
+                                {{ faq.answer|richtext }}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+{% endif %}
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 9. NEWSLETTER SIGN-UP                                                        #}
+{# Background: --cawc-bg. Compact centered form with language preference.      #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[var(--cawc-bg)]" id="newsletter">
+    <div class="mx-auto w-full max-w-[760px] px-5 py-16 sm:px-6 lg:py-20">
+        <div class="text-center">
+            <p class="cawc-eyebrow">Community Updates</p>
+            <h2 class="mt-3 text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)] sm:text-[2.4rem]">
+                Stay connected with CAWC NSW
+            </h2>
+            <p class="mx-auto mt-3 max-w-[520px] text-[17px] leading-[1.65] text-[var(--cawc-copy)]">
+                News, program updates, and events delivered to your inbox. In English or Khmer - your choice.
+            </p>
+        </div>
+
+        <form method="post" action="{% url 'newsletter_subscribe' %}"
+              class="mt-9 overflow-hidden rounded-2xl bg-[var(--cawc-surface)] shadow-[0_20px_50px_-12px_rgba(15,41,34,0.07)]">
+            {% csrf_token %}
+            <input type="hidden" name="source" value="homepage">
+            <input type="text" name="website" class="hidden" tabindex="-1" autocomplete="off">
+
+            <div class="p-6 sm:p-8">
+                <div class="flex flex-col gap-3 sm:flex-row">
+                    <div class="relative flex-1">
+                        <svg class="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--cawc-copy)]/40"
+                             viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <input type="email" name="email" placeholder="your@email.com" autocomplete="email" required
+                               class="w-full rounded-xl border border-[var(--cawc-border)] bg-[var(--cawc-bg)] py-3 pl-10 pr-4 text-[15px] text-[var(--cawc-heading)] placeholder-[var(--cawc-copy)]/40 outline-none transition focus:border-[var(--cawc-green)] focus:ring-2 focus:ring-[var(--cawc-green)]/10">
+                    </div>
+                    <div class="flex shrink-0 gap-2" role="group" aria-label="Language preference">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="language_preference" value="any" class="sr-only" data-lang-pill checked>
+                            <span class="cawc-lang-pill">Any</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="language_preference" value="en" class="sr-only" data-lang-pill>
+                            <span class="cawc-lang-pill">EN</span>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="language_preference" value="km" class="sr-only" data-lang-pill>
+                            <span class="cawc-lang-pill">ខ្មែរ</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit"
+                        class="cawc-donate-btn mt-3 w-full justify-center"
+                        style="height:48px;font-size:15px;">
+                    Subscribe to updates
+                </button>
+                <p class="mt-3 text-center text-[12px] leading-relaxed text-[var(--cawc-copy)]/50">
+                    By subscribing, you agree to receive CAWC NSW updates. We only use your email for these updates, and you can unsubscribe at any time.
+                </p>
+            </div>
+        </form>
+    </div>
+</section>
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 10. COMMUNITY PHOTO STRIP                                                   #}
+{# Background: --cawc-surface (white). Horizontal scroll strip.               #}
+{# Placeholder: 4 gradient boxes when no photos are uploaded.                 #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[var(--cawc-surface)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8 lg:pb-20">
+
+        <div class="mb-8 flex items-end justify-between">
+            <div>
+                <p class="cawc-eyebrow">Community Life</p>
+                <h2 class="mt-2 text-[1.7rem] font-black tracking-[-0.03em] text-[var(--cawc-heading)]">
+                    Our Community in Action
+                </h2>
+            </div>
+            <a href="/gallery/"
+               class="text-[13px] font-semibold text-[var(--cawc-green)] transition hover:opacity-60">
+                View gallery →
+            </a>
+        </div>
+
+        {% if page.photo_strip_display %}
+            {# Horizontal scroll — hidden scrollbar for clean editorial look #}
+            <div class="flex gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                {% for photo in page.photo_strip_display %}
+                    <div class="h-[240px] w-[320px] shrink-0 overflow-hidden rounded-2xl shadow-[0_20px_50px_-12px_rgba(15,41,34,0.08)]">
+                        {% image photo width-640 class="h-full w-full object-cover" %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--cawc-border)] bg-[var(--cawc-surface-soft)] py-16 text-center">
+                <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-[var(--cawc-surface)] text-[var(--cawc-green)] shadow-[0_8px_20px_-8px_rgba(15,41,34,0.12)]">
+                    <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.8"/>
+                        <circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="m21 15-5-5L5 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <p class="mt-5 text-[15px] font-semibold text-[var(--cawc-heading)]">Community photos coming soon</p>
+                <p class="mt-2 max-w-[360px] text-[13px] leading-[1.7] text-[var(--cawc-copy)]">
+                    Add photos to the <strong class="font-semibold text-[var(--cawc-heading)]">Community Photo Strip</strong> section in Wagtail.
+                </p>
+                <a href="/gallery/" class="btn-ghost mt-5 text-[13px]">
+                    Browse the gallery
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    /* ── Accordion ── */
+    (function () {
+        document.querySelectorAll('[data-accordion] .cawc-accordion-btn').forEach(function (btn) {
+            var body = btn.nextElementSibling;
+            if (!body) return;
+            btn.addEventListener('click', function () {
+                var isOpen = btn.getAttribute('aria-expanded') === 'true';
+                if (isOpen) {
+                    btn.setAttribute('aria-expanded', 'false');
+                    body.setAttribute('aria-hidden', 'true');
+                    body.style.maxHeight = '0';
+                } else {
+                    btn.setAttribute('aria-expanded', 'true');
+                    body.setAttribute('aria-hidden', 'false');
+                    body.style.maxHeight = body.scrollHeight + 'px';
+                }
+            });
+        });
+    })();
+</script>
+<script>
+    (function () {
+        const display = document.querySelector('[data-hero-running-display]');
+        if (!display) return;
+
+        const slides = Array.from(display.querySelectorAll('[data-hero-running-slide]'));
+        const dots = Array.from(display.querySelectorAll('[data-hero-running-dot]'));
+        if (slides.length <= 1) {
+            if (dots[0]) dots[0].classList.add('is-active');
+            return;
+        }
+
+        let currentIndex = 0;
+        let intervalId = null;
+
+        function showSlide(nextIndex) {
+            currentIndex = nextIndex;
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('is-active', index === currentIndex);
+            });
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('is-active', index === currentIndex);
+            });
+        }
+
+        function startRotation() {
+            intervalId = window.setInterval(() => {
+                showSlide((currentIndex + 1) % slides.length);
+            }, 3600);
+        }
+
+        function restartRotation() {
+            if (intervalId) window.clearInterval(intervalId);
+            startRotation();
+        }
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                showSlide(index);
+                restartRotation();
+            });
+        });
+
+        /* Pause rotation while hovering over the display */
+        display.addEventListener('mouseenter', () => {
+            if (intervalId) window.clearInterval(intervalId);
+            intervalId = null;
+        });
+        display.addEventListener('mouseleave', () => {
+            if (!intervalId) startRotation();
+        });
+
+        showSlide(0);
+        startRotation();
+    })();
+</script>
+{% endblock %}

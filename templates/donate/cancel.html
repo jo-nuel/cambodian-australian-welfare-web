@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Donation Cancelled — CAWC NSW{% endblock %}
+
+{% block content %}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[580px] px-5 py-24 text-center sm:px-6">
+        <h1 class="text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)]">
+            Donation cancelled
+        </h1>
+        <p class="mt-4 text-[17px] leading-[1.65] text-[var(--cawc-copy)]">
+            No payment was taken. If you'd still like to support CAWC NSW, you can try again anytime.
+        </p>
+        <button type="button"
+                data-donate-open
+                class="mt-8 inline-flex h-[48px] items-center justify-center rounded-full bg-[var(--cawc-green)] px-8 text-[14px] font-semibold text-white transition hover:bg-[var(--cawc-green-strong)]">
+            Try again
+        </button>
+        <a href="/"
+           class="ml-3 mt-8 inline-flex h-[48px] items-center justify-center rounded-full border border-[var(--cawc-border)]/30 px-8 text-[14px] font-semibold text-[var(--cawc-green)] transition hover:bg-white">
+            Back to home
+        </a>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,309 @@
+{# ── CAWC FAQ Chatbot ── #}
+{% load static %}
+
+{# ── HTML: the floating button + chat panel ── #}
+
+<button id="cawc-chat-btn"
+        aria-label="Open FAQ chat"
+        onclick="cawcChatToggle()"
+        class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--cawc-green)] text-white shadow-lg transition hover:bg-[var(--cawc-green-strong)] focus:outline-none">
+    {# Chat bubble icon — shows when closed #}
+    <svg id="cawc-chat-icon-open" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-3 3-3-3z"/>
+    </svg>
+    {# X icon — shows when open #}
+    <svg id="cawc-chat-icon-close" class="hidden h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    </svg>
+</button>
+
+<div id="cawc-chat-panel"
+     class="fixed bottom-24 right-6 z-50 hidden w-[min(340px,calc(100vw-3rem))] rounded-2xl border border-[#e4e8e4] bg-white shadow-2xl flex flex-col"
+     style="max-height: 480px;">
+
+    {# Header #}
+    <div class="flex items-center gap-3 rounded-t-2xl bg-[var(--cawc-green)] px-4 py-3">
+        <div class="flex h-8 w-8 items-center justify-center rounded-full bg-white overflow-hidden">
+            <img src="{% static 'img/logo.png' %}" alt="CAWC logo" class="h-7 w-7 object-contain" style="mix-blend-mode:multiply;">
+        </div>
+        <div>
+            <div class="text-sm font-semibold text-white">CAWC Assistant</div>
+            <div class="text-xs text-white/70">Ask me anything</div>
+        </div>
+    </div>
+
+    {# Message history — scrollable #}
+    <div id="cawc-chat-messages"
+         class="flex-1 overflow-y-auto px-4 py-3 space-y-3"
+         style="min-height: 200px;">
+        {# The first message is added by JS on open #}
+    </div>
+
+    {# Input area #}
+    <div class="border-t border-[#e4e8e4] px-3 py-2 flex gap-2">
+        <input id="cawc-chat-input"
+               type="text"
+               placeholder="Type your question…"
+               maxlength="200"
+               autocomplete="off"
+               class="flex-1 rounded-lg border border-[#e4e8e4] px-3 py-2 text-sm text-[#1a2420] placeholder-[#9aada9] focus:outline-none focus:border-[var(--cawc-green)]"
+               onkeydown="if(event.key==='Enter') cawcChatSend()">
+        <button onclick="cawcChatSend()"
+                class="flex items-center justify-center rounded-lg bg-[var(--cawc-green)] px-3 py-2 text-white transition hover:bg-[var(--cawc-green-strong)]"
+                aria-label="Send">
+            <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<script>
+// ── FAQ data ──────────────────────────────────────────────────────────────────
+// Each entry has:
+//   keywords — words the bot looks for in the user's message (lowercase)
+//   answer   — what the bot replies
+
+var CAWC_FAQS = [
+    // ── General & Services ────────────────────────────────────────────────────
+    {
+        keywords: ['service', 'services', 'program', 'programs', 'offer', 'provide', 'welfare',
+                   'assistance', 'housing', 'employment', 'education', 'healthcare', 'available',
+                   'what do you', 'do you offer'],
+        answer: 'We provide a range of community support services including welfare assistance, family support, youth programs, community events, and referrals to housing, employment, education, and healthcare. Our aim is to support the wellbeing of individuals and families in the community.'
+    },
+    {
+        keywords: ['eligible', 'eligibility', 'qualify', 'who can', 'can i', 'am i',
+                   'requirements', 'criteria', 'who is'],
+        answer: 'Most services are available to members of the Cambodian community and others in need. Eligibility may vary depending on the program, so we recommend contacting us to discuss your situation.'
+    },
+    {
+        keywords: ['cost', 'fee', 'fees', 'free', 'charge', 'price', 'paid', 'pay',
+                   'how much', 'expensive'],
+        answer: 'Many of our services are free. Some specialised programs or events may have a small fee, but this will always be clearly communicated beforehand.'
+    },
+    {
+        keywords: ['issue', 'issues', 'help with', 'hardship', 'financial', 'isolation',
+                   'struggling', 'problem', 'problems', 'challenge', 'challenges', 'difficulty',
+                   'what can you help', 'types of'],
+        answer: 'We can assist with a variety of challenges including financial hardship, family support, social isolation, employment guidance, and connecting you with appropriate services.'
+    },
+
+    // ── Contact & Access ──────────────────────────────────────────────────────
+    {
+        keywords: ['contact', 'reach', 'phone', 'email', 'call', 'message', 'talk', 'speak',
+                   'get help', 'get in touch', 'form'],
+        answer: 'You can reach us via phone, email, or through the contact form on our website. Our team will respond and guide you to the right support. Visit our <a href="/contact/" class="underline text-[#1E6F56]">Contact page</a> for details.'
+    },
+    {
+        keywords: ['location', 'located', 'where', 'address', 'find you', 'directions', 'based'],
+        answer: 'We are based in New South Wales, Australia. Please check our <a href="/contact/" class="underline text-[#1E6F56]">Contact page</a> or contact us directly for the exact address and directions.'
+    },
+    {
+        keywords: ['hours', 'open', 'opening', 'close', 'closing', 'when', 'office hours',
+                   'public holiday', 'holidays'],
+        answer: 'Our hours may vary depending on programs and public holidays. We recommend checking our <a href="/contact/" class="underline text-[#1E6F56]">Contact page</a> or contacting us directly for the latest information.'
+    },
+    {
+        keywords: ['appointment', 'book', 'booking', 'walk in', 'walk-in', 'drop in',
+                   'need to book', 'do i need'],
+        answer: 'Some services require an appointment, while others accept walk-ins. Contact us ahead of time to confirm availability.'
+    },
+
+    // ── Programs & Participation ──────────────────────────────────────────────
+    {
+        keywords: ['event', 'events', 'cultural', 'workshop', 'workshops', 'activities',
+                   'community program', 'what programs', 'what events', 'run'],
+        answer: 'We organise cultural events, youth activities, educational workshops, and health and wellbeing programs to support community engagement and development.'
+    },
+    {
+        keywords: ['join', 'register', 'sign up', 'enrol', 'enroll', 'participate',
+                   'how do i join', 'how to join', 'facebook'],
+        answer: 'You can join by registering through our Facebook page or contacting us directly. Details for each program are listed on our <a href="https://www.facebook.com/search/top?q=cambodian%20australian%20welfare%20council%20inc" target="_blank" class="underline text-[#1E6F56]">Facebook page</a>.'
+    },
+    {
+        keywords: ['youth', 'young', 'young people', 'teenager', 'teenagers', 'kids',
+                   'children', 'student', 'students'],
+        answer: 'Yes, we run youth-focused programs that support education, personal development, and community involvement.'
+    },
+    {
+        keywords: ['family', 'families', 'senior', 'seniors', 'elderly', 'older', 'aged',
+                   'grandparent', 'grandparents'],
+        answer: 'Yes, we offer programs and services designed to support families and older members of the community, including social and wellbeing initiatives.'
+    },
+
+    // ── Language & Accessibility ──────────────────────────────────────────────
+    {
+        keywords: ['khmer', 'language', 'languages', 'translate', 'translation',
+                   'speak khmer', 'interpreter', 'english', 'cambodian language'],
+        answer: 'Yes — we offer support in Khmer and English to ensure accessibility for the community. If you need assistance in a specific language, please let us know when you contact us.'
+    },
+    {
+        keywords: ['confidential', 'confidentiality', 'privacy', 'private', 'personal information',
+                   'data', 'secure', 'safe'],
+        answer: 'Yes, all personal information is handled confidentially and in line with privacy regulations. Your information will not be shared without your consent.'
+    },
+
+    // ── Volunteering & Support ────────────────────────────────────────────────
+    {
+        keywords: ['volunteer', 'volunteering', 'help out', 'give time', 'involved',
+                   'get involved', 'contribute time', 'assist'],
+        answer: 'We welcome volunteers to assist with events, programs, and community activities. Contact us through our <a href="/contact/" class="underline text-[#1E6F56]">Contact page</a> to learn about current opportunities.'
+    },
+    {
+        keywords: ['donate', 'donation', 'money', 'fund', 'give', 'contribute',
+                   'partner', 'sponsorship', 'support us', 'support your'],
+        answer: 'You can support us through donations, volunteering, or partnerships. Contributions help us continue delivering services to the community. Use the <strong>Donate</strong> button at the top of the page to contribute securely.'
+    },
+
+    // ── Technical & Website ───────────────────────────────────────────────────
+    {
+        keywords: ['account', 'login', 'log in', 'sign in', 'register', 'sign up',
+                   'create account', 'need an account'],
+        answer: 'No, most information on our website is available without an account. Some features may require registration, but general browsing and contact forms do not.'
+    },
+    {
+        keywords: ['trouble', 'problem', 'broken', 'not working', 'error', 'bug',
+                   'website issue', 'technical', 'refresh', 'browser'],
+        answer: 'Try refreshing the page or using another device or browser. If issues continue, please contact us through our <a href="/contact/" class="underline text-[#1E6F56]">Contact page</a> and we will assist you.'
+    }
+];
+
+var CAWC_FALLBACK = "I'm not sure about that — for the best answer, please visit our " +
+    '<a href="/contact/" class="underline text-[#1E6F56]">Contact page</a> or speak with our team directly.';
+
+// ── Matching algorithm ────────────────────────────────────────────────────────
+// Strips punctuation, lowercases the input, then counts how many keywords
+// from each FAQ appear in the user's message. Returns the best match.
+
+function cawcMatch(input) {
+    var clean = input.toLowerCase().replace(/[^\w\s]/g, ' ');
+    var words = clean.split(/\s+/);
+
+    var bestScore = 0;
+    var bestAnswer = CAWC_FALLBACK;
+
+    for (var i = 0; i < CAWC_FAQS.length; i++) {
+        var faq = CAWC_FAQS[i];
+        var score = 0;
+        for (var k = 0; k < faq.keywords.length; k++) {
+            // Multi-word keywords (e.g. "get help") need a phrase check
+            if (faq.keywords[k].indexOf(' ') !== -1) {
+                if (clean.indexOf(faq.keywords[k]) !== -1) score += 2; // phrase match = bonus
+            } else {
+                if (words.indexOf(faq.keywords[k]) !== -1) score += 1;
+            }
+        }
+        if (score > bestScore) {
+            bestScore = score;
+            bestAnswer = faq.answer;
+        }
+    }
+
+    return bestAnswer;
+}
+
+// ── UI helpers ────────────────────────────────────────────────────────────────
+
+// Types HTML content character by character into bubble.
+// Plain text is typed one char at a time; HTML elements (e.g. links) appear instantly.
+function cawcTypewriter(bubble, html, messages) {
+    var temp = document.createElement('div');
+    temp.innerHTML = html;
+
+    // Split the HTML into segments: text nodes typed out, element nodes inserted whole
+    var segments = [];
+    temp.childNodes.forEach(function (node) {
+        if (node.nodeType === 3) {
+            segments.push({ type: 'text', content: node.textContent });
+        } else {
+            segments.push({ type: 'element', node: node.cloneNode(true) });
+        }
+    });
+
+    var segIdx = 0;
+    var charIdx = 0;
+    var currentTextNode = null;
+
+    function tick() {
+        if (segIdx >= segments.length) return;
+
+        var seg = segments[segIdx];
+
+        if (seg.type === 'text') {
+            if (charIdx === 0) {
+                currentTextNode = document.createTextNode('');
+                bubble.appendChild(currentTextNode);
+            }
+            currentTextNode.textContent += seg.content[charIdx];
+            charIdx++;
+            if (charIdx >= seg.content.length) { segIdx++; charIdx = 0; }
+        } else {
+            bubble.appendChild(seg.node);
+            segIdx++;
+        }
+
+        messages.scrollTop = messages.scrollHeight;
+        setTimeout(tick, 18);
+    }
+
+    tick();
+}
+
+function cawcAddMessage(text, side) {
+    var messages = document.getElementById('cawc-chat-messages');
+    var row = document.createElement('div');
+    row.className = 'flex ' + (side === 'user' ? 'justify-end' : 'justify-start');
+
+    var bubble = document.createElement('div');
+    bubble.className = side === 'user'
+        ? 'max-w-[80%] rounded-2xl rounded-tr-sm bg-[var(--cawc-green)] px-3 py-2 text-sm text-white'
+        : 'max-w-[80%] rounded-2xl rounded-tl-sm bg-[#f1f4f2] px-3 py-2 text-sm text-[#1a2420]';
+
+    row.appendChild(bubble);
+    messages.appendChild(row);
+
+    if (side === 'user') {
+        bubble.innerHTML = text;
+        messages.scrollTop = messages.scrollHeight;
+    } else {
+        cawcTypewriter(bubble, text, messages);
+    }
+}
+
+function cawcChatSend() {
+    var input = document.getElementById('cawc-chat-input');
+    var text = input.value.trim();
+    if (!text) return;
+
+    cawcAddMessage(text, 'user');
+    input.value = '';
+
+    // Small delay so the bot feels like it's "thinking" before typing starts
+    setTimeout(function () {
+        cawcAddMessage(cawcMatch(text), 'bot');
+    }, 400);
+}
+
+function cawcChatToggle() {
+    var panel = document.getElementById('cawc-chat-panel');
+    var iconOpen  = document.getElementById('cawc-chat-icon-open');
+    var iconClose = document.getElementById('cawc-chat-icon-close');
+    var isHidden = panel.classList.toggle('hidden');
+    iconOpen.classList.toggle('hidden', !isHidden);
+    iconClose.classList.toggle('hidden', isHidden);
+
+    if (!isHidden) {
+        // First open: show a greeting
+        var messages = document.getElementById('cawc-chat-messages');
+        if (messages.children.length === 0) {
+            cawcAddMessage(
+                "Hi! I'm the CAWC assistant. Ask me about our services, eligibility, opening hours, programs, volunteering, donations, or anything else — I'm here to help.",
+                'bot'
+            );
+        }
+        document.getElementById('cawc-chat-input').focus();
+    }
+}
+</script>

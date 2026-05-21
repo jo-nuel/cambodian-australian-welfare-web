@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block title %}{{ page.title }} | CAWC NSW{% endblock %}
+{% block og_title %}{{ page.title }} — CAWC NSW{% endblock %}
+{% block og_description %}{% if page.search_description %}{{ page.search_description }}{% else %}Answers to common questions about CAWC NSW programs, services, donations, volunteering, and how to get in touch.{% endif %}{% endblock %}
+
+{% block content %}
+
+{# ── Header ───────────────────────────────────────────────────────────────── #}
+<section class="px-5 pb-16 pt-16 text-center sm:px-6 lg:px-8 lg:pt-24">
+    <div class="mx-auto w-full max-w-[900px]">
+        <p class="cawc-eyebrow">Help &amp; Information</p>
+        <h1 class="mt-5 text-[3rem] font-black tracking-[-0.05em] text-[var(--cawc-text-strong)] sm:text-[4.25rem]">{{ page.title }}</h1>
+        <div class="mx-auto mt-6 h-1.5 w-24 rounded-full bg-[var(--cawc-green)]"></div>
+        <div class="mx-auto mt-8 max-w-[780px] text-[18px] leading-[1.8] text-[var(--cawc-copy)] [&_p]:mb-4 [&_p:last-child]:mb-0">
+            {{ page.intro_display|richtext }}
+        </div>
+    </div>
+</section>
+
+{# ── FAQ items ────────────────────────────────────────────────────────────── #}
+<section class="pb-24">
+    <div class="mx-auto w-full max-w-[860px] px-5 sm:px-6 lg:px-8">
+
+        {# Shared FAQ snippets — grouped by category #}
+        {% if faq_groups %}
+            <div data-accordion>
+                {% for group in faq_groups %}
+                    <div class="{% if not forloop.first %}mt-12{% endif %}">
+                        <h2 class="mb-5 text-[1.4rem] font-black tracking-[-0.03em] text-[var(--cawc-heading)]">{{ group.title }}</h2>
+                        <div class="space-y-3">
+                            {% for faq in group.items %}
+                                <div class="overflow-hidden rounded-2xl bg-white shadow-[0_4px_20px_-4px_rgba(15,41,34,0.08)]">
+                                    <button type="button" class="cawc-accordion-btn" aria-expanded="false">
+                                        {{ faq.question }}
+                                        <svg class="cawc-accordion-chevron h-5 w-5 shrink-0 text-[var(--cawc-green)]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </button>
+                                    <div class="cawc-accordion-body" aria-hidden="true">
+                                        <div class="border-t border-[var(--cawc-border)]/20 px-7 py-5 text-[15px] leading-[1.8] text-[var(--cawc-copy)] [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_a]:text-[var(--cawc-green)] [&_a]:underline">
+                                            {{ faq.answer|richtext }}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            {# Legacy local FAQs — render after snippet groups if any exist #}
+            {% if page.faqs %}
+                <div class="mt-12 space-y-3" data-accordion>
+                    {% for block in page.faqs %}
+                        <div class="overflow-hidden rounded-2xl bg-white shadow-[0_4px_20px_-4px_rgba(15,41,34,0.08)]">
+                            <button type="button" class="cawc-accordion-btn" aria-expanded="false">
+                                {{ block.value.question }}
+                                <svg class="cawc-accordion-chevron h-5 w-5 shrink-0 text-[var(--cawc-green)]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </button>
+                            <div class="cawc-accordion-body" aria-hidden="true">
+                                <div class="border-t border-[var(--cawc-border)]/20 px-7 py-5 text-[15px] leading-[1.8] text-[var(--cawc-copy)] [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_a]:text-[var(--cawc-green)] [&_a]:underline">
+                                    {{ block.value.answer|richtext }}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        {% elif page.faqs %}
+            {# Snippet system not populated yet — show legacy local FAQs #}
+            <div class="space-y-3" data-accordion>
+                {% for block in page.faqs %}
+                    <div class="overflow-hidden rounded-2xl bg-white shadow-[0_4px_20px_-4px_rgba(15,41,34,0.08)]">
+                        <button type="button" class="cawc-accordion-btn" aria-expanded="false">
+                            {{ block.value.question }}
+                            <svg class="cawc-accordion-chevron h-5 w-5 shrink-0 text-[var(--cawc-green)]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                        <div class="cawc-accordion-body" aria-hidden="true">
+                            <div class="border-t border-[var(--cawc-border)]/20 px-7 py-5 text-[15px] leading-[1.8] text-[var(--cawc-copy)] [&_p]:mb-3 [&_p:last-child]:mb-0 [&_ul]:list-disc [&_ul]:pl-5 [&_a]:text-[var(--cawc-green)] [&_a]:underline">
+                            {{ block.value.answer|richtext }}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="rounded-2xl bg-white px-8 py-12 text-center shadow-[0_4px_20px_-4px_rgba(15,41,34,0.08)]">
+                <p class="text-[16px] text-[var(--cawc-copy)]">FAQ items will appear here once added in Wagtail. Go to <strong>Snippets → FAQs</strong> to add the first one.</p>
+            </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{# ── CTA ──────────────────────────────────────────────────────────────────── #}
+<section class="pb-24">
+    <div class="mx-auto w-full max-w-[980px] px-5 sm:px-6 lg:px-8">
+        <div class="overflow-hidden rounded-[28px] bg-[linear-gradient(135deg,#1f4337_0%,#0f2922_100%)] px-8 py-12 text-center text-white shadow-[0_28px_60px_-28px_rgba(15,41,34,0.55)] sm:px-12">
+            <h2 class="text-[2.3rem] font-black tracking-[-0.05em]">Still have questions?</h2>
+            <p class="mx-auto mt-5 max-w-[720px] text-[16px] leading-[1.8] text-[rgba(255,255,255,0.76)]">
+                Our team is happy to help. Get in touch and we will get back to you as soon as possible.
+            </p>
+            <div class="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
+                <a href="/contact/"
+                   class="inline-flex h-12 items-center justify-center rounded-full bg-white px-7 text-[14px] font-semibold text-[var(--cawc-green)] transition hover:bg-[#eef4f1]">
+                    Contact Us
+                </a>
+                <a href="/get-involved/#expression-of-interest/"
+                   class="inline-flex h-12 items-center justify-center rounded-full border border-white/25 px-7 text-[14px] font-semibold text-white transition hover:bg-white/10">
+                    Get Involved
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+(function () {
+    document.querySelectorAll('[data-accordion] .cawc-accordion-btn').forEach(function (btn) {
+        var body = btn.nextElementSibling;
+        if (!body) return;
+        btn.addEventListener('click', function () {
+            var isOpen = btn.getAttribute('aria-expanded') === 'true';
+            if (isOpen) {
+                btn.setAttribute('aria-expanded', 'false');
+                body.setAttribute('aria-hidden', 'true');
+                body.style.maxHeight = '0';
+            } else {
+                btn.setAttribute('aria-expanded', 'true');
+                body.setAttribute('aria-hidden', 'false');
+                body.style.maxHeight = body.scrollHeight + 'px';
+            }
+        });
+    });
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block title %}{{ page.title }} | CAWC NSW{% endblock %}
+{% block og_title %}{{ page.title }} — CAWC NSW{% endblock %}
+{% block og_description %}{% if page.search_description %}{{ page.search_description }}{% else %}Learn about the Cambodian-Australian Welfare Council of NSW — our history, mission, values, board, and the team behind our work.{% endif %}{% endblock %}
+
+{% block content %}
+<section class="relative overflow-hidden bg-white">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-14 sm:px-6 lg:px-8 lg:py-18">
+        <div class="max-w-[900px]">
+            <h1 class="text-[2.75rem] font-black leading-[1.02] tracking-[-0.05em] text-[var(--cawc-text-strong)] sm:text-[4rem] lg:text-[4.7rem]">
+                {{ page.lead_heading_display }}
+            </h1>
+            <div class="mt-6 max-w-[720px] text-[18px] leading-[1.7] text-[var(--cawc-copy)] sm:text-[20px] [&_p]:mb-4 [&_p:last-child]:mb-0">
+                {{ page.lead_paragraph_display|richtext }}
+            </div>
+            <div class="mt-8 flex flex-wrap gap-3">
+                {% if page.primary_cta_display %}
+                    <a href="{{ page.primary_cta_display.link }}" class="btn-primary btn-lg">
+                        {{ page.primary_cta_display.text }}
+                    </a>
+                {% endif %}
+                {% if page.secondary_cta_display %}
+                    <a href="{{ page.secondary_cta_display.link }}" class="btn-secondary btn-lg">
+                        {{ page.secondary_cta_display.text }}
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if page.hero_image_display %}
+            <figure class="mt-10 overflow-hidden rounded-[30px] bg-[var(--cawc-surface-soft)] shadow-[0_24px_60px_-38px_rgba(15,41,34,0.34)] ring-1 ring-[var(--cawc-border)]/15">
+                {% image page.hero_image_display fill-1400x720 class="aspect-[16/8] w-full object-cover" %}
+            </figure>
+        {% endif %}
+    </div>
+</section>
+
+<section class="bg-[var(--cawc-bg)] py-14 lg:py-18">
+    <div class="mx-auto grid w-full max-w-[1180px] gap-10 px-5 sm:px-6 lg:grid-cols-[0.84fr_1.16fr] lg:px-8">
+        <div class="lg:sticky lg:top-28 lg:self-start">
+            <p class="cawc-eyebrow">
+                About CAWC
+            </p>
+            <h2 class="mt-3 text-[2rem] font-black leading-tight tracking-[-0.04em] text-[var(--cawc-text-strong)] sm:text-[2.55rem]">
+                Community-led support with cultural understanding.
+            </h2>
+        </div>
+        <div class="space-y-5 text-[17px] leading-[1.85] text-[var(--cawc-copy)] [&_p]:mb-4 [&_p:last-child]:mb-0">
+            {% for paragraph in page.additional_paragraphs_display %}
+                <div>{{ paragraph|richtext }}</div>
+            {% empty %}
+                <p>CAWC NSW exists to strengthen connection, wellbeing and opportunity for Cambodian families and communities across New South Wales.</p>
+                <p>We support people through culturally responsive services, community-led programs, advocacy, and trusted spaces that help people feel seen, safe and connected.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% if page.section_cards_display %}
+    <section class="bg-[var(--cawc-surface)] py-14 lg:py-18">
+        <div class="mx-auto w-full max-w-[1180px] px-5 sm:px-6 lg:px-8">
+            <div class="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
+                <div>
+                    <p class="cawc-eyebrow">
+                        Who We Are
+                    </p>
+                    <h2 class="mt-2 text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-text-strong)] sm:text-[2.5rem]">
+                        Learn about our story, people and purpose
+                    </h2>
+                </div>
+            </div>
+            <div class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+                {% for child in page.section_cards_display %}
+                    <a href="{{ child.url }}" class="cawc-card-hover group flex min-h-[250px] flex-col rounded-[26px] bg-white p-6 shadow-[0_18px_42px_-24px_rgba(15,41,34,0.12)] ring-1 ring-[var(--cawc-border)]/10">
+                        <div class="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--cawc-surface-soft)] text-[var(--cawc-green)] transition group-hover:bg-[var(--cawc-green)] group-hover:text-white">
+                            {% if child.slug == "history" %}
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            {% elif child.slug == "vision" %}
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/></svg>
+                            {% elif child.slug == "mission" %}
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+                            {% elif child.slug == "objectives" %}
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            {% elif child.slug == "board" %}
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            {% else %}
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            {% endif %}
+                        </div>
+                        <h3 class="mt-6 text-[24px] font-bold tracking-[-0.04em] text-[var(--cawc-text-strong)]">{{ child.title }}</h3>
+                        <p class="mt-3 text-[15px] leading-[1.7] text-[var(--cawc-copy)]">{{ child.summary_display }}</p>
+                        <span class="mt-auto inline-flex items-center gap-2 pt-6 text-[14px] font-semibold text-[var(--cawc-green)] transition group-hover:gap-3">
+                            Explore
+                            <span aria-hidden="true">&rarr;</span>
+                        </span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endif %}
+
+{% if page.mission_highlight_display %}
+    <section class="bg-[var(--cawc-surface)] py-14 lg:py-18">
+        <div class="mx-auto w-full max-w-[1180px] px-5 sm:px-6 lg:px-8">
+            <div class="grid gap-8 rounded-[28px] bg-[linear-gradient(135deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)] px-7 py-9 text-white shadow-[0_24px_56px_-34px_rgba(0,19,13,0.65)] sm:px-9 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:px-10 lg:py-10">
+                <div>
+                    <p class="cawc-eyebrow-light">
+                        The Heart Of Our Work
+                    </p>
+                    <h2 class="mt-4 max-w-[820px] text-[1.75rem] font-black leading-tight tracking-[-0.04em] sm:text-[2.25rem] lg:text-[2.65rem]">
+                        {{ page.mission_highlight_display.lead_paragraph_display|striptags }}
+                    </h2>
+                </div>
+                <div class="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                    <a href="{{ page.mission_highlight_display.url }}" class="inline-flex h-12 items-center justify-center rounded-full bg-white px-7 text-[14px] font-semibold text-[var(--cawc-green)] transition hover:bg-[var(--cawc-surface-soft)] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--cawc-green-deep)]">
+                        Read Mission
+                    </a>
+                    {% if page.secondary_cta_display %}
+                        <a href="{{ page.secondary_cta_display.link }}" class="inline-flex h-12 items-center justify-center rounded-full border border-white/25 px-7 text-[14px] font-semibold text-white transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[var(--cawc-green-deep)]">
+                            {{ page.secondary_cta_display.text }}
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+{% endif %}
+{% endblock %}

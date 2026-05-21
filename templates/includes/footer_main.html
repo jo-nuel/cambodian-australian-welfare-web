@@ -1,0 +1,193 @@
+{% load static wagtailcore_tags %}
+
+<footer style="background:linear-gradient(170deg,#0f2922 0%,#071a12 100%);color:#c0cdc8;">
+
+    {# ── Main grid ── #}
+    <div style="max-width:1240px;margin:0 auto;padding:56px 28px 48px;display:grid;grid-template-columns:1fr;gap:36px;">
+        <style>
+            @media (min-width:1024px) {
+                #cawc-footer-grid { grid-template-columns: 1.6fr 0.75fr 0.75fr 0.75fr 1.1fr !important; gap:32px !important; }
+            }
+            @media (min-width:640px) and (max-width:1023px) {
+                #cawc-footer-grid { grid-template-columns: 1fr 1fr !important; }
+            }
+            #cawc-footer-grid a:hover { color: #ffffff !important; }
+        </style>
+        <div id="cawc-footer-grid" style="display:grid;grid-template-columns:1fr;gap:36px;">
+
+            {# Brand column #}
+            <div>
+                <a href="/" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none;margin-bottom:20px;">
+                    <div style="width:40px;height:40px;border-radius:10px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;">
+                        <img src="{% static 'img/logo.png' %}" alt="" style="height:30px;width:auto;filter:brightness(1.1);mix-blend-mode:screen;">
+                    </div>
+                    <div style="line-height:1.2;">
+                        <div style="font-size:14px;font-weight:900;letter-spacing:-0.01em;color:#ffffff;">CAWC NSW</div>
+                        <div style="font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.13em;color:#6a8880;">Est. 1984</div>
+                    </div>
+                </a>
+                <p style="font-size:13px;line-height:1.85;color:#97b0a9;max-width:270px;margin:0 0 20px;">
+                    Empowering Cambodian communities in NSW through advocacy, education,
+                    cultural connection, and practical support.
+                </p>
+
+                {# Contact chips #}
+                <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+                    {% with org=settings.a_home.OrganisationSettings %}
+                    {% with footer_email=org.email_address|default:"cawcnsw@cambodianwelfare.org.au" %}
+                    <a href="https://www.facebook.com/cambodianwelfare" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:10px;font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;"
+                       onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#97b0a9'">
+                        <span style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        </span>
+                        facebook.com/cambodianwelfare
+                    </a>
+                    <a href="mailto:{{ footer_email }}" style="display:inline-flex;align-items:center;gap:10px;font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;"
+                       onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#97b0a9'">
+                        <span style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#b0cdc2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 6l-10 7L2 6" stroke="#b0cdc2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </span>
+                        {{ footer_email }}
+                    </a>
+                    {% endwith %}
+                    {% endwith %}
+                    <a href="https://www.google.com/maps/place/46+Simpson+Rd,+Bonnyrigg+NSW+2177/@-33.8906329,150.8706732,17z/data=!3m1!4b1!4m5!3m4!1s0x6b12941b500cb7a9:0xcc17343b66e871a3!8m2!3d-33.8906329!4d150.8732481" target="_blank" rel="noopener"
+                       style="display:inline-flex;align-items:center;gap:10px;font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;"
+                       onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#97b0a9'">
+                        <span style="width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.10);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="#b0cdc2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="10" r="3" stroke="#b0cdc2" stroke-width="2"/></svg>
+                        </span>
+                        Bonnyrigg, NSW
+                    </a>
+                </div>
+
+                {# Social icons #}
+                <div style="display:flex;gap:8px;">
+                    <a href="https://www.facebook.com/cambodianwelfare" target="_blank" rel="noopener" aria-label="Facebook"
+                       style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;color:#b0cdc2;text-decoration:none;transition:background 150ms,border-color 150ms,color 150ms;"
+                       onmouseover="this.style.background='rgba(255,255,255,0.10)';this.style.borderColor='rgba(255,255,255,0.22)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.10)';this.style.color='#b0cdc2'">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                    </a>
+                    <a href="https://www.youtube.com/channel/UCL37kiIM2SUIg_FAiwTY-Uw" target="_blank" rel="noopener" aria-label="YouTube"
+                       style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;color:#b0cdc2;text-decoration:none;transition:background 150ms,border-color 150ms,color 150ms;"
+                       onmouseover="this.style.background='rgba(255,255,255,0.10)';this.style.borderColor='rgba(255,255,255,0.22)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.10)';this.style.color='#b0cdc2'">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="#0f2922"/></svg>
+                    </a>
+                    <a href="https://www.google.com/maps/place/46+Simpson+Rd,+Bonnyrigg+NSW+2177/@-33.8906329,150.8706732,17z/data=!3m1!4b1!4m5!3m4!1s0x6b12941b500cb7a9:0xcc17343b66e871a3!8m2!3d-33.8906329!4d150.8732481" target="_blank" rel="noopener" aria-label="Find us on Google Maps"
+                       style="width:36px;height:36px;border-radius:8px;border:1px solid rgba(255,255,255,0.10);background:rgba(255,255,255,0.04);display:flex;align-items:center;justify-content:center;color:#b0cdc2;text-decoration:none;transition:background 150ms,border-color 150ms,color 150ms;"
+                       onmouseover="this.style.background='rgba(255,255,255,0.10)';this.style.borderColor='rgba(255,255,255,0.22)';this.style.color='#fff'" onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.borderColor='rgba(255,255,255,0.10)';this.style.color='#b0cdc2'">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                    </a>
+                </div>
+            </div>
+
+            {# Explore #}
+            <div>
+                <h3 style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;color:#ffffff;margin:0 0 18px;">Explore</h3>
+                <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;">
+                    <li><a href="/"            style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Home</a></li>
+                    <li><a href="/about-us/"   style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Who We Are</a></li>
+                    <li><a href="/programs/"   style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">What We Do</a></li>
+                    <li><a href="/impact/"     style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Impact</a></li>
+                    <li><a href="/events/"     style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Events</a></li>
+                    <li><a href="/gallery/"    style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Gallery</a></li>
+                </ul>
+            </div>
+
+            {# Support Us #}
+            <div>
+                <h3 style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;color:#ffffff;margin:0 0 18px;">Support Us</h3>
+                <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;">
+                    <li><button type="button" data-donate-open style="background:none;border:none;padding:0;font-size:13px;color:#97b0a9;cursor:pointer;font-family:inherit;transition:color 150ms;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#97b0a9'">Donate</button></li>
+                    <li><a href="/get-involved/" style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Volunteer</a></li>
+                    <li><a href="/get-involved/" style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Internships</a></li>
+                    <li><a href="/resources/"    style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Resources</a></li>
+                    <li><a href="/faq/"          style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">FAQ</a></li>
+                    <li><a href="/contact/"      style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Contact Us</a></li>
+                </ul>
+            </div>
+
+            {# Programs #}
+            <div>
+                <h3 style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;color:#ffffff;margin:0 0 18px;">Programs</h3>
+                <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;">
+                    <li><a href="/programs/" style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Cambodian Seniors Hub</a></li>
+                    <li><a href="/programs/" style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Cyber Security Program</a></li>
+                    <li><a href="/programs/" style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">SETS Program</a></li>
+                    <li><a href="/programs/" style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Women's Support Hub</a></li>
+                    <li><a href="/programs/" style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Children's Support</a></li>
+                    <li><a href="/programs/" style="font-size:13px;color:#97b0a9;text-decoration:none;transition:color 150ms;">Laotian Adults Support</a></li>
+                </ul>
+            </div>
+
+            {# Newsletter #}
+            <div>
+                <h3 style="font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.16em;color:#ffffff;margin:0 0 18px;">Stay in Touch</h3>
+                <p style="font-size:13px;line-height:1.75;color:#97b0a9;margin:0 0 20px;">
+                    Community news, program updates, and events - monthly to your inbox.
+                </p>
+                <form method="post" action="{% url 'newsletter_subscribe' %}" style="display:flex;flex-direction:column;gap:8px;">
+                    {% csrf_token %}
+                    <input type="hidden" name="source" value="footer">
+                    <input type="text" name="website" style="display:none;" tabindex="-1" autocomplete="off">
+                    <div style="position:relative;">
+                        <svg style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:#6a8880;pointer-events:none;" viewBox="0 0 24 24" fill="none">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M22 6l-10 7L2 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <input type="email" name="email" placeholder="you@example.com" autocomplete="email" required
+                               style="width:100%;box-sizing:border-box;height:44px;padding:0 12px 0 38px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);border-radius:8px;font-size:13px;color:#ffffff;font-family:inherit;outline:none;transition:border-color 150ms,background 150ms;"
+                               onfocus="this.style.borderColor='rgba(176,205,194,0.50)';this.style.background='rgba(255,255,255,0.08)'"
+                               onblur="this.style.borderColor='rgba(255,255,255,0.12)';this.style.background='rgba(255,255,255,0.05)'">
+                    </div>
+                    <button type="submit"
+                            class="footer-subscribe-btn"
+                            style="height:44px;width:100%;border:none;border-radius:8px;background:#ffffff;font-size:13px;font-weight:700;color:#1E6F56;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:background 150ms;"
+                            onmouseover="this.style.background='#eef5f1'" onmouseout="this.style.background='#ffffff'">
+                        Subscribe
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </button>
+                    <p style="font-size:11px;line-height:1.5;color:#6a8880;margin:0;">
+                        By subscribing, you agree to receive CAWC NSW updates. We only use your email for these updates, and you can unsubscribe any time.
+                    </p>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+    {# ── Acknowledgement ── #}
+    <div style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.10);">
+        <div style="max-width:1240px;margin:0 auto;padding:20px 28px;display:flex;align-items:flex-start;gap:14px;">
+            <div style="width:32px;height:32px;border-radius:8px;background:rgba(176,205,194,0.10);border:1px solid rgba(176,205,194,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
+                    <circle cx="12" cy="12" r="9" stroke="#b0cdc2" stroke-width="2"/>
+                    <path d="M12 3c2 3.5 2 13.5 0 18M12 3c-2 3.5-2 13.5 0 18M3 12h18" stroke="#b0cdc2" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <p style="font-size:11.5px;line-height:1.85;color:#7a9690;margin:0;flex:1;">
+                <strong style="color:#b0cdc2;font-weight:600;">Acknowledgement of Country.</strong>
+                CAWC NSW acknowledges the Traditional Custodians of the lands on which we work and live,
+                and pays respect to their Elders past, present and emerging. We recognise the continuing
+                connection to land, water and community of Aboriginal and Torres Strait Islander peoples.
+            </p>
+        </div>
+    </div>
+
+    {# ── Legal bar ── #}
+    <div style="border-top:1px solid rgba(255,255,255,0.07);background:rgba(0,0,0,0.18);">
+        <div style="max-width:1240px;margin:0 auto;padding:16px 28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;">
+            <p style="font-size:11.5px;color:#627870;margin:0;">
+                &copy; {% now "Y" %} Cambodian-Australian Welfare Council NSW. All rights reserved.
+                {% with abn=settings.a_home.OrganisationSettings.abn %}{% if abn %}&nbsp;·&nbsp; ABN {{ abn }}{% endif %}{% endwith %}
+                &nbsp;·&nbsp; Registered ACNC Charity
+            </p>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:18px;">
+                <a href="/faq/"     style="font-size:11.5px;color:#627870;text-decoration:none;transition:color 150ms;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#627870'">FAQ</a>
+                <a href="/contact/" style="font-size:11.5px;color:#627870;text-decoration:none;transition:color 150ms;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#627870'">Contact</a>
+                <a href="#"         style="font-size:11.5px;color:#627870;text-decoration:none;transition:color 150ms;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#627870'">Privacy</a>
+            </div>
+        </div>
+    </div>
+
+</footer>

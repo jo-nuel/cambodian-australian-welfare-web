@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Something went wrong | CAWC NSW</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+            background: #0f2922;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            text-align: center;
+        }
+        .label {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: #7fc4a8;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-family: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            max-width: 640px;
+            margin-bottom: 1.25rem;
+        }
+        p {
+            font-size: 17px;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.65);
+            max-width: 520px;
+            margin-bottom: 2.5rem;
+        }
+        a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            height: 48px;
+            padding: 0 28px;
+            border-radius: 999px;
+            background: #1E6F56;
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+        a:hover { background: #14624A; }
+    </style>
+</head>
+<body>
+    <p class="label">500 — Server error</p>
+    <h1>Something went wrong on our end.</h1>
+    <p>
+        We're sorry about that. Our team has been notified. Please try again in a moment,
+        or head back to the homepage.
+    </p>
+    <a href="/">Go to homepage</a>
+</body>
+</html>

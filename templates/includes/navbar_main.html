@@ -1,0 +1,356 @@
+{% load static about_tags i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_site_nav_pages as nav_pages %}
+{% locale_prefix as lp %}
+
+<header class="sticky top-0 z-50 bg-white border-b border-[#e4e8e4] shadow-[0_1px_6px_rgba(15,41,34,0.06)]">
+    <div class="mx-auto flex h-[72px] w-full max-w-[1280px] items-center px-7 gap-0">
+
+        {# ── Logo ── #}
+        <a href="{% if LANGUAGE_CODE == 'km' %}/km/{% else %}/{% endif %}" aria-label="CAWC NSW home"
+           class="flex shrink-0 items-center gap-2.5 no-underline">
+            <img src="{% static 'img/logo.png' %}" alt="CAWC NSW logo"
+                 class="h-16 w-auto" style="mix-blend-mode:multiply;">
+            <div class="hidden sm:block leading-tight">
+                <div class="text-[15px] font-black tracking-tight text-[#17302a]">CAWC NSW</div>
+                <div class="text-[9.5px] font-semibold uppercase tracking-[0.14em] text-[#7a9690]">Since 1984</div>
+            </div>
+        </a>
+
+        {# ── Desktop nav links — LEFT, immediately after logo ── #}
+        <nav class="ml-6 hidden h-full items-center gap-0.5 xl:flex" aria-label="Main navigation">
+
+            {% for nav_page in nav_pages %}
+                {% with children=nav_page.get_children.live.public %}
+                    {% if nav_page.slug != "resources" and nav_page.slug != "impact" %}
+
+                        {% if children %}
+                            <div class="cawc-has-dropdown">
+                                <a href="{{ lp }}{{ nav_page.url }}"
+                                   class="cawc-nav-link{% if nav_page.url in request.path %} cawc-nav-link-active{% endif %}">
+                                    {% if nav_page.title == "Programs" %}What We Do{% else %}{{ nav_page.title }}{% endif %}
+                                    <svg class="cawc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </a>
+                                <div class="cawc-dropdown-panel">
+                                    <div class="cawc-dropdown-inner">
+                                        <a href="{{ lp }}{{ nav_page.url }}" class="cawc-dropdown-label">
+                                            {% if nav_page.title == "Programs" %}All Programs{% else %}Overview{% endif %}
+                                        </a>
+                                        <div class="cawc-dropdown-divider"></div>
+                                        {% for child in children %}
+                                            <a href="{{ lp }}{{ child.url }}">{{ child.title }}</a>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% else %}
+                            <a href="{{ lp }}{{ nav_page.url }}"
+                               class="cawc-nav-link{% if nav_page.url in request.path %} cawc-nav-link-active{% endif %}">
+                                {% if nav_page.title == "Programs" %}What We Do{% else %}{{ nav_page.title }}{% endif %}
+                            </a>
+                        {% endif %}
+
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+
+            <a href="{{ lp }}/impact/"
+               class="cawc-nav-link{% if '/impact' in request.path %} cawc-nav-link-active{% endif %}">
+                Impact
+            </a>
+            <a href="{{ lp }}/resources/"
+               class="cawc-nav-link{% if '/resources' in request.path %} cawc-nav-link-active{% endif %}">
+                Resources
+            </a>
+            <a href="{{ lp }}/contact/"
+               class="cawc-nav-link{% if '/contact' in request.path %} cawc-nav-link-active{% endif %}">
+                Contact
+            </a>
+            <div class="cawc-has-dropdown">
+                <a href="{{ lp }}/gallery/"
+                   class="cawc-nav-link{% if '/gallery' in request.path %} cawc-nav-link-active{% endif %}">
+                    Gallery
+                    <svg class="cawc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <div class="cawc-dropdown-panel">
+                    <div class="cawc-dropdown-inner">
+                        <a href="{{ lp }}/gallery/" class="cawc-dropdown-label">All Photos</a>
+                        <div class="cawc-dropdown-divider"></div>
+                        <a href="{{ lp }}/gallery/community/">Community Photos</a>
+                        <a href="{{ lp }}/gallery/programs/">Program Photos</a>
+                        <a href="{{ lp }}/gallery/events/">Event Photos</a>
+                    </div>
+                </div>
+            </div>
+
+        </nav>
+
+        {# ── RIGHT: language toggle + donate — ml-auto pushes to far right ── #}
+        <div class="ml-auto hidden items-center gap-3 xl:flex">
+
+            <a href="{% url 'search' %}"
+               class="cawc-search-button{% if request.path == '/search/' %} cawc-nav-link-active{% endif %}"
+               aria-label="Search the CAWC NSW website"
+               title="Search">
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                          stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+
+            {# Divider #}
+            <div class="h-6 w-px bg-[#e4e8e4]"></div>
+
+            {# Language toggle — flag-only, simple and bulletproof #}
+            <div class="flex items-center gap-2" role="group" aria-label="Language selector">
+                <button type="button"
+                        data-lang-btn="en"
+                        onclick="cawcSetLang('en')"
+                        aria-label="Switch to English"
+                        title="English"
+                        class="cawc-lang-flag{% if LANGUAGE_CODE == 'en' %} lang-btn-active{% endif %}">
+                    <img src="https://flagcdn.com/w40/au.png" alt="English (Australia)">
+                </button>
+                <button type="button"
+                        data-lang-btn="km"
+                        onclick="cawcSetLang('km')"
+                        aria-label="Switch to Khmer"
+                        title="ភាសាខ្មែរ"
+                        class="cawc-lang-flag{% if LANGUAGE_CODE == 'km' %} lang-btn-active{% endif %}">
+                    <img src="https://flagcdn.com/w40/kh.png" alt="Khmer (Cambodia)">
+                </button>
+            </div>
+
+            {# Donate #}
+            <button type="button"
+                    data-donate-open
+                    class="cawc-donate-btn donate-btn-pulse"
+                    style="height:40px;padding:0 20px;font-size:14px;">
+                Donate
+            </button>
+
+        </div>
+
+        {# ── Mobile hamburger — ONLY visible below lg breakpoint ── #}
+        <button type="button"
+                id="cawc-hamburger"
+                aria-label="Open navigation"
+                aria-expanded="false"
+                class="ml-auto flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-[#e4e8e4] bg-[#f7faf8] text-[#1E6F56] transition hover:bg-[#eef5f1] xl:hidden">
+            <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+        </button>
+
+    </div>
+
+    {# ── Mobile panel ── #}
+    <div id="cawc-mobile-panel"
+         class="hidden border-t border-[#e4e8e4] bg-white shadow-[0_12px_32px_rgba(15,41,34,0.12)] xl:hidden">
+        <div class="mx-auto max-w-[1280px] px-4 py-3">
+
+            <nav class="max-h-[65vh] overflow-y-auto" aria-label="Mobile navigation">
+                <form action="{% url 'search' %}" method="get" class="cawc-mobile-search-form" role="search">
+                    <label class="sr-only" for="mobile-site-search">Search the CAWC NSW website</label>
+                    <input id="mobile-site-search"
+                           type="search"
+                           name="q"
+                           value="{{ request.GET.q }}"
+                           placeholder="Search CAWC NSW">
+                    <button type="submit">Search</button>
+                </form>
+
+                <a href="{% if LANGUAGE_CODE == 'km' %}/km/{% else %}/{% endif %}" class="cawc-mobile-link">{% if LANGUAGE_CODE == 'km' %}ទំព័រដើម{% else %}Home{% endif %}</a>
+
+                {% for nav_page in nav_pages %}
+                    {% with children=nav_page.get_children.live.public %}
+                        {% if nav_page.slug != "resources" and nav_page.slug != "impact" %}
+                            {% if children %}
+                                <details>
+                                    <summary class="cawc-mobile-link">
+                                        {% if nav_page.title == "Programs" %}What We Do{% else %}{{ nav_page.title }}{% endif %}
+                                        <svg class="h-3.5 w-3.5 shrink-0 text-[#7a9690]" viewBox="0 0 24 24" fill="none">
+                                            <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </summary>
+                                    <div class="ml-4 mt-0.5 border-l-2 border-[#eef5f1] pb-1.5 pl-3">
+                                        <a href="{{ lp }}{{ nav_page.url }}"
+                                           class="block py-1.5 text-[10.5px] font-bold uppercase tracking-[0.13em] text-[#1E6F56]">
+                                            {% if nav_page.title == "Programs" %}All Programs{% else %}Overview{% endif %}
+                                        </a>
+                                        {% for child in children %}
+                                            <a href="{{ lp }}{{ child.url }}" class="cawc-mobile-link"
+                                               style="font-size:12.5px;font-weight:500;color:#4f6360;padding:6px 8px;">
+                                                {{ child.title }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                </details>
+                            {% else %}
+                                <a href="{{ lp }}{{ nav_page.url }}" class="cawc-mobile-link">
+                                    {% if nav_page.title == "Programs" %}What We Do{% else %}{{ nav_page.title }}{% endif %}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    {% endwith %}
+                {% endfor %}
+
+                <a href="{{ lp }}/impact/"    class="cawc-mobile-link">Impact</a>
+                <a href="{{ lp }}/resources/" class="cawc-mobile-link">Resources</a>
+                <a href="{{ lp }}/contact/"   class="cawc-mobile-link">Contact</a>
+                <details>
+                    <summary class="cawc-mobile-link">
+                        Gallery
+                        <svg class="h-3.5 w-3.5 shrink-0 text-[#7a9690]" viewBox="0 0 24 24" fill="none">
+                            <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </summary>
+                    <div class="ml-4 mt-0.5 border-l-2 border-[#eef5f1] pb-1.5 pl-3">
+                        <a href="{{ lp }}/gallery/" class="block py-1.5 text-[10.5px] font-bold uppercase tracking-[0.13em] text-[#1E6F56]">
+                            All Photos
+                        </a>
+                        <a href="{{ lp }}/gallery/community/" class="cawc-mobile-link" style="font-size:12.5px;font-weight:500;color:#4f6360;padding:6px 8px;">
+                            Community Photos
+                        </a>
+                        <a href="{{ lp }}/gallery/programs/" class="cawc-mobile-link" style="font-size:12.5px;font-weight:500;color:#4f6360;padding:6px 8px;">
+                            Program Photos
+                        </a>
+                        <a href="{{ lp }}/gallery/events/" class="cawc-mobile-link" style="font-size:12.5px;font-weight:500;color:#4f6360;padding:6px 8px;">
+                            Event Photos
+                        </a>
+                    </div>
+                </details>
+
+            </nav>
+
+            <div class="mt-3 space-y-2.5 border-t border-[#f0f4f1] pt-3">
+
+                {# Language toggle — mobile #}
+                <div class="flex gap-1 rounded-xl bg-[#f1f4f2] p-1">
+                    <button type="button"
+                            data-lang-btn="en"
+                            onclick="cawcSetLang('en')"
+                            aria-label="Switch to English"
+                            class="{% if LANGUAGE_CODE == 'en' %}lang-btn-active{% else %}lang-btn-inactive{% endif %} flex flex-1 items-center justify-center gap-2 rounded-lg py-2 text-[12px] font-semibold transition-all duration-150">
+                        <img src="https://flagcdn.com/w40/au.png" alt=""
+                             class="h-4 w-auto rounded-[3px] shadow-[0_0_0_1px_rgba(0,0,0,0.12)]">
+                        <span>English</span>
+                    </button>
+                    <button type="button"
+                            data-lang-btn="km"
+                            onclick="cawcSetLang('km')"
+                            aria-label="Switch to Khmer"
+                            class="{% if LANGUAGE_CODE == 'km' %}lang-btn-active{% else %}lang-btn-inactive{% endif %} flex flex-1 items-center justify-center gap-2 rounded-lg py-2 text-[12px] font-semibold transition-all duration-150">
+                        <img src="https://flagcdn.com/w40/kh.png" alt=""
+                             class="h-4 w-auto rounded-[3px] shadow-[0_0_0_1px_rgba(0,0,0,0.12)]">
+                        <span>ខ្មែរ</span>
+                    </button>
+                </div>
+
+                <button type="button"
+                        data-donate-open
+                        class="cawc-donate-btn w-full"
+                        style="height:44px;font-size:14px;">
+                    Donate Now
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+</header>
+
+<script>
+    /* ── Scroll-aware shadow ── */
+    (function () {
+        var header = document.querySelector('header');
+        if (!header) return;
+        function onScroll() {
+            header.classList.toggle('cawc-header-scrolled', window.scrollY > 4);
+        }
+        window.addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+    })();
+
+    /* ── Mobile hamburger ── */
+    (function () {
+        var btn   = document.getElementById('cawc-hamburger');
+        var panel = document.getElementById('cawc-mobile-panel');
+        if (!btn || !panel) return;
+        btn.addEventListener('click', function () {
+            var open = panel.classList.toggle('hidden');
+            btn.setAttribute('aria-expanded', String(!open));
+        });
+        document.addEventListener('click', function (e) {
+            if (!btn.contains(e.target) && !panel.contains(e.target)) {
+                panel.classList.add('hidden');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    })();
+
+    /* ── Dropdown keyboard support ── */
+    (function () {
+        document.querySelectorAll('.cawc-has-dropdown').forEach(function (container) {
+            var trigger = container.querySelector('.cawc-nav-link');
+            var panel   = container.querySelector('.cawc-dropdown-panel');
+            if (!trigger || !panel) return;
+
+            trigger.setAttribute('aria-haspopup', 'true');
+            trigger.setAttribute('aria-expanded', 'false');
+
+            function open() {
+                panel.style.visibility   = 'visible';
+                panel.style.opacity      = '1';
+                panel.style.pointerEvents = 'auto';
+                trigger.setAttribute('aria-expanded', 'true');
+            }
+            function close() {
+                panel.style.visibility   = '';
+                panel.style.opacity      = '';
+                panel.style.pointerEvents = '';
+                trigger.setAttribute('aria-expanded', 'false');
+            }
+
+            /* Keyboard: Enter / Space / ArrowDown opens + focuses first item */
+            trigger.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    open();
+                    var first = panel.querySelector('a');
+                    if (first) first.focus();
+                }
+            });
+
+            /* Arrow nav inside the dropdown */
+            panel.addEventListener('keydown', function (e) {
+                var links = Array.from(panel.querySelectorAll('a'));
+                var idx   = links.indexOf(document.activeElement);
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (idx < links.length - 1) links[idx + 1].focus();
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (idx > 0) links[idx - 1].focus();
+                    else { close(); trigger.focus(); }
+                } else if (e.key === 'Escape') {
+                    close(); trigger.focus();
+                } else if (e.key === 'Tab') {
+                    /* Tab out of last item closes the dropdown */
+                    if (!e.shiftKey && idx === links.length - 1) close();
+                    if (e.shiftKey && idx === 0) { e.preventDefault(); close(); trigger.focus(); }
+                }
+            });
+
+            /* Close when focus leaves the whole container */
+            container.addEventListener('focusout', function (e) {
+                if (!container.contains(e.relatedTarget)) close();
+            });
+        });
+    })();
+</script>

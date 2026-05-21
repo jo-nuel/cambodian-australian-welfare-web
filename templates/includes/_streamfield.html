@@ -1,0 +1,48 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% for block in streamfield %}
+    {% if block.block_type == 'heading' %}
+        <h1 class="text-4xl text-center font-bold mb-12">{{ block.value }}</h1>
+
+    {% elif block.block_type == 'subheading' %}
+        <h3 class="text-xl font-semibold mb-4 opacity-70">{{ block.value }}</h3>
+
+    {% elif block.block_type == 'paragraph' %}
+        <div class="richtext mb-6">{{ block.value }}</div>
+
+    {% elif block.block_type == 'image' %}
+        {% image block.value width-1200 class="w-full rounded-xl mb-6" %}
+
+    {% elif block.block_type == 'carousel' %}
+        {% if block.value %}
+        <div class="carousel w-full rounded-xl mb-6">
+            {% for img in block.value %}
+            <div id="slide-{{ forloop.parentloop.counter }}-{{ forloop.counter }}" class="carousel-item relative w-full">
+                {% image img width-1200 class="w-full object-cover max-h-96" %}
+                <div class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between">
+                    <a href="#slide-{{ forloop.parentloop.counter }}-{% if forloop.first %}{{ block.value|length }}{% else %}{{ forloop.counter0 }}{% endif %}" class="btn btn-circle">❮</a>
+                    <a href="#slide-{{ forloop.parentloop.counter }}-{% if forloop.last %}1{% else %}{{ forloop.revcounter0 }}{% endif %}" class="btn btn-circle">❯</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+    {% elif block.block_type == 'image_text' %}
+        <div class="flex flex-col md:flex-row gap-8 items-start mb-6">
+            <div class="md:w-1/2">
+                {% image block.value.image width-800 class="w-full rounded-xl" %}
+            </div>
+            <div class="md:w-1/2 richtext">
+                {{ block.value.text|richtext }}
+            </div>
+        </div>
+
+    {% elif block.block_type == 'button' %}
+        <div class="flex justify-center mb-6">
+            <a href="{{ block.value.link }}" class="btn btn-soft">
+                {{ block.value.text }}
+            </a>
+        </div>
+    {% endif %}
+{% endfor %}

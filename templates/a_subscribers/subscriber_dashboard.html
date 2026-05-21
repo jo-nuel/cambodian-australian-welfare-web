@@ -1,0 +1,81 @@
+{% extends "wagtailadmin/base.html" %}
+{% load wagtailadmin_tags i18n %}
+
+{% block titletag %}Subscriber Dashboard | Wagtail{% endblock %}
+
+{% block content %}
+<div class="nice-padding">
+
+    <header class="w-header">
+        <div class="w-header__wrapper">
+            <div class="w-header__title-wrapper">
+                <h1 class="w-header__title">Subscriber Dashboard</h1>
+            </div>
+        </div>
+    </header>
+
+    {# ── Totals ── #}
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-top:28px;max-width:760px;">
+
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;">
+            <p style="margin:0 0 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6b7280;">Confirmed</p>
+            <p style="margin:0;font-size:36px;font-weight:900;color:#1E6F56;line-height:1;">{{ total_confirmed }}</p>
+            <p style="margin:4px 0 0;font-size:12px;color:#9ca3af;">Active subscribers</p>
+        </div>
+
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;">
+            <p style="margin:0 0 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6b7280;">Pending</p>
+            <p style="margin:0;font-size:36px;font-weight:900;color:#d97706;line-height:1;">{{ total_pending }}</p>
+            <p style="margin:4px 0 0;font-size:12px;color:#9ca3af;">Awaiting confirmation</p>
+        </div>
+
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;">
+            <p style="margin:0 0 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#6b7280;">Unsubscribed</p>
+            <p style="margin:0;font-size:36px;font-weight:900;color:#6b7280;line-height:1;">{{ total_unsubscribed }}</p>
+            <p style="margin:4px 0 0;font-size:12px;color:#9ca3af;">Opted out</p>
+        </div>
+
+    </div>
+
+    {# ── Confirmed by language ── #}
+    <div style="margin-top:36px;max-width:560px;">
+        <h2 style="font-size:14px;font-weight:700;color:#111827;margin:0 0 14px;">Confirmed by language preference</h2>
+        <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden;">
+            {% for row in by_language %}
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px;border-bottom:1px solid #f3f4f6;">
+                <span style="font-size:14px;color:#374151;">{{ row.label }}</span>
+                <span style="font-size:16px;font-weight:700;color:#1E6F56;">{{ row.count }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {# ── Stale pending prompt ── #}
+    {% if stale_pending_count %}
+    <div style="margin-top:28px;max-width:560px;background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:18px 20px;display:flex;gap:14px;align-items:flex-start;">
+        <svg style="flex-shrink:0;margin-top:1px;" width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div>
+            <p style="margin:0 0 8px;font-size:14px;font-weight:600;color:#92400e;">
+                {{ stale_pending_count }} subscriber{{ stale_pending_count|pluralize }} pending for more than 7 days
+            </p>
+            <p style="margin:0 0 12px;font-size:13px;color:#92400e;">
+                These people signed up but haven't confirmed yet. You can resend their confirmation emails.
+            </p>
+            <a href="{% url 'resend_pending_confirmations' %}" class="button button-small">
+                Resend confirmation emails
+            </a>
+        </div>
+    </div>
+    {% endif %}
+
+    {# ── Quick actions ── #}
+    <div style="margin-top:32px;display:flex;flex-wrap:wrap;gap:10px;">
+        <a href="{% url 'subscribers_export_csv' %}" class="button button-secondary">Export Subscribers CSV</a>
+        <a href="{% url 'wagtailsnippets_a_subscribers_subscriber:list' %}" class="button button-secondary">View Subscribers</a>
+        <a href="{% url 'wagtailsnippets_a_subscribers_newsletter:list' %}" class="button button-secondary">View Newsletters</a>
+    </div>
+
+</div>
+{% endblock %}

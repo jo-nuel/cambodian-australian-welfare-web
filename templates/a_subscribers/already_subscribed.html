@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Already Subscribed | CAWC NSW{% endblock %}
+
+{% block content %}
+<section class="bg-[linear-gradient(180deg,#FAFAF7_0%,#F4F1EA_100%)] py-24 lg:py-36">
+    <div class="mx-auto w-full max-w-[680px] px-5 text-center sm:px-6 lg:px-8">
+        <div class="mx-auto mb-8 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--cawc-green)]/10">
+            <svg class="h-8 w-8 text-[var(--cawc-green)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+        </div>
+        <h1 class="text-3xl font-black tracking-tight text-[var(--cawc-text-strong)] sm:text-4xl">You're already subscribed</h1>
+        <p class="mt-4 text-lg leading-relaxed text-slate-600">
+            This email address is already on our newsletter list. We'll keep the updates coming.
+        </p>
+        <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <a href="/" class="cawc-donate-btn w-full min-w-[180px] sm:w-auto">Back to home</a>
+            <a href="/events/" class="inline-flex min-h-[44px] w-full min-w-[180px] items-center justify-center rounded-full border border-[var(--cawc-green)] px-7 py-3 text-[15px] font-semibold leading-none text-[var(--cawc-green)] transition hover:bg-[var(--cawc-green)]/10 sm:w-auto">
+                Explore events
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

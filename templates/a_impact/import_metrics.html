@@ -1,0 +1,147 @@
+{% extends "wagtailadmin/base.html" %}
+{% load wagtailadmin_tags %}
+
+{% block titletag %}Import Impact Metrics | Wagtail{% endblock %}
+
+{% block content %}
+<div class="nice-padding">
+
+    <header class="w-header">
+        <div class="w-header__wrapper">
+            <div class="w-header__title-wrapper">
+                <h1 class="w-header__title">Import Impact Metrics</h1>
+            </div>
+        </div>
+    </header>
+
+    {# ── Accepted formats ── #}
+    <div style="margin-top:20px;max-width:720px;background:#f0f9ff;border:1px solid #bae6fd;border-radius:10px;padding:16px 20px;">
+        <p style="margin:0 0 8px;font-size:13px;font-weight:700;color:#075985;">Accepted file formats</p>
+        <p style="margin:0 0 6px;font-size:13px;color:#075985;">
+            <strong>Excel (.xlsx)</strong> — upload the CAWC Excel file directly. The importer reads the indicator column and year columns automatically.
+        </p>
+        <p style="margin:0;font-size:13px;color:#075985;">
+            <strong>CSV (.csv)</strong> — save the Excel as CSV (File → Save As → CSV), or use our standard format with columns:
+            <code style="background:#e0f2fe;padding:2px 5px;border-radius:3px;font-size:12px;">period, title, value, unit, category, description</code>
+        </p>
+    </div>
+
+    {# ── Error ── #}
+    {% if error %}
+        <div style="margin-top:20px;max-width:720px;background:#fef2f2;border:1px solid #fca5a5;border-radius:10px;padding:16px 20px;">
+            <p style="margin:0;font-size:13px;font-weight:600;color:#991b1b;">{{ error }}</p>
+        </div>
+    {% endif %}
+
+    {# ── Preview table ── #}
+    {% if preview %}
+        <div style="margin-top:28px;max-width:960px;">
+            <h2 style="font-size:15px;font-weight:700;color:#111827;margin:0 0 6px;">
+                Preview — {{ preview|length }} metric{{ preview|length|pluralize }} found
+            </h2>
+            <p style="font-size:12px;color:#6b7280;margin:0 0 14px;">
+                Review the data below. Metrics that already exist for the same period will be skipped.
+                Imported metrics are <strong>not published</strong> until you tick "Display on impact page" in Impact Metrics.
+            </p>
+
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:13px;">
+                    <thead>
+                        <tr style="background:#1E6F56;color:#fff;">
+                            <th style="padding:8px 12px;text-align:left;">Period</th>
+                            <th style="padding:8px 12px;text-align:left;">Title</th>
+                            <th style="padding:8px 12px;text-align:left;">Value</th>
+                            <th style="padding:8px 12px;text-align:left;">Unit</th>
+                            <th style="padding:8px 12px;text-align:left;">Category</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in preview %}
+                            <tr style="background:{% cycle '#ffffff' '#f1f4f2' %};">
+                                <td style="padding:7px 12px;color:#1E6F56;font-weight:600;">{{ row.period }}</td>
+                                <td style="padding:7px 12px;">{{ row.title }}</td>
+                                <td style="padding:7px 12px;font-weight:600;">{{ row.value }}</td>
+                                <td style="padding:7px 12px;color:#6b7280;">{{ row.unit|default:"—" }}</td>
+                                <td style="padding:7px 12px;color:#6b7280;">{{ row.category }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {# Confirm form #}
+            <form method="post" style="margin-top:20px;display:flex;gap:12px;align-items:center;">
+                {% csrf_token %}
+                <textarea name="preview_json" style="display:none;">{{ preview_json }}</textarea>
+                <button type="submit" name="confirm" value="1" class="button">
+                    Confirm import ({{ preview|length }} metric{{ preview|length|pluralize }})
+                </button>
+                <a href="{% url 'impact_metrics_import' %}" class="button button-secondary">
+                    Cancel — upload a different file
+                </a>
+            </form>
+        </div>
+
+    {% else %}
+        {# ── Upload form ── #}
+        <form method="post" enctype="multipart/form-data" style="margin-top:28px;max-width:560px;">
+            {% csrf_token %}
+            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:24px;">
+                <label style="display:block;font-size:13px;font-weight:600;color:#374151;margin-bottom:10px;">
+                    Choose your Excel or CSV file
+                </label>
+                <input type="file"
+                       name="metrics_file"
+                       accept=".xlsx,.xls,.csv"
+                       required
+                       style="display:block;font-size:13px;margin-bottom:18px;">
+                <button type="submit" class="button">
+                    Upload and preview
+                </button>
+            </div>
+        </form>
+
+        {# ── Format guide ── #}
+        <div style="margin-top:28px;max-width:720px;">
+            <h2 style="font-size:14px;font-weight:700;color:#111827;margin:0 0 12px;">Expected Excel format</h2>
+            <div style="overflow-x:auto;">
+                <table style="width:100%;border-collapse:collapse;font-size:12px;">
+                    <thead>
+                        <tr style="background:#1E6F56;color:#fff;">
+                            <th style="padding:7px 10px;">N</th>
+                            <th style="padding:7px 10px;">Indicator</th>
+                            <th style="padding:7px 10px;">2025</th>
+                            <th style="padding:7px 10px;">2024</th>
+                            <th style="padding:7px 10px;">2023</th>
+                            <th style="padding:7px 10px;">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="background:#f9fafb;">
+                            <td style="padding:6px 10px;color:#6b7280;">1</td>
+                            <td style="padding:6px 10px;">Total of Grant (AUD)</td>
+                            <td style="padding:6px 10px;">337,714.17</td>
+                            <td style="padding:6px 10px;">412,793.72</td>
+                            <td style="padding:6px 10px;color:#6b7280;">—</td>
+                            <td style="padding:6px 10px;color:#6b7280;">750,508</td>
+                        </tr>
+                        <tr style="background:#fff;">
+                            <td style="padding:6px 10px;color:#6b7280;">2</td>
+                            <td style="padding:6px 10px;">Total of Volunteers</td>
+                            <td style="padding:6px 10px;">10</td>
+                            <td style="padding:6px 10px;color:#6b7280;">—</td>
+                            <td style="padding:6px 10px;color:#6b7280;">—</td>
+                            <td style="padding:6px 10px;color:#6b7280;">10</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="margin:10px 0 0;font-size:12px;color:#6b7280;">
+                Year columns are detected automatically. Empty cells and the Total column are skipped.
+                Each (indicator, year) pair becomes one metric entry.
+            </p>
+        </div>
+    {% endif %}
+
+</div>
+{% endblock %}

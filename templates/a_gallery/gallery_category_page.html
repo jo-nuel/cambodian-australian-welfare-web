@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags %}
+
+{% block title %}{{ page.title }} | CAWC NSW{% endblock %}
+
+{% block extra_head %}
+    {% include "a_gallery/includes/gallery_masonry_styles.html" %}
+{% endblock %}
+
+{% block content %}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-8 pt-14 sm:px-6 lg:px-8 lg:pb-10 lg:pt-18">
+        <p class="cawc-eyebrow">
+            {{ page.category_meta.eyebrow }}
+        </p>
+        <h1 class="mt-4 max-w-[860px] text-[2.55rem] font-black leading-[0.95] tracking-[-0.05em] text-[var(--cawc-heading)] sm:text-[3.3rem] lg:text-[3.95rem]">
+            {{ page.title }}
+        </h1>
+        <div class="mt-6 max-w-[720px] text-[17px] leading-[1.78] text-[var(--cawc-copy)] [&_p]:mb-4 [&_p:last-child]:mb-0">
+            {{ page.intro_display|richtext }}
+        </div>
+    </div>
+</section>
+
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-16 sm:px-6 lg:px-8 lg:pb-20">
+        {% include "a_gallery/includes/gallery_masonry_block.html" with entries=page.image_entries_display initial_visible=14 batch_size=10 empty_message="Add images to this gallery page in Wagtail to display them here." %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+    {% include "a_gallery/includes/gallery_masonry_scripts.html" %}
+{% endblock %}

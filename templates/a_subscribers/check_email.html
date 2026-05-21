@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Check Your Email | CAWC NSW{% endblock %}
+
+{% block extra_head %}
+<style>
+    .mail-icon-wrap {
+        animation: icon-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    .mail-icon-svg {
+        animation: mail-float 3s ease-in-out 0.6s infinite;
+    }
+    @keyframes icon-pop {
+        from { transform: scale(0.4); opacity: 0; }
+        to   { transform: scale(1);   opacity: 1; }
+    }
+    @keyframes mail-float {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(-5px); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="bg-[linear-gradient(180deg,#FAFAF7_0%,#F4F1EA_100%)] py-24 lg:py-36">
+    <div class="mx-auto w-full max-w-[680px] px-5 text-center sm:px-6 lg:px-8">
+        <div class="mail-icon-wrap mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--cawc-green)]/10">
+            <svg class="mail-icon-svg h-10 w-10 text-[var(--cawc-green)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+            </svg>
+        </div>
+        {% if delivery_issue %}
+            <h1 class="text-3xl font-black tracking-tight text-[var(--cawc-text-strong)] sm:text-4xl">Subscription saved</h1>
+            <p class="mt-4 text-lg leading-relaxed text-slate-600">
+                We've recorded your subscription, but had trouble sending the confirmation email right now.
+            </p>
+            <p class="mt-3 text-sm text-slate-500">
+                Please check back in a few minutes. If you still don't receive an email, contact us at
+                <a href="mailto:cawcnsw@cambodianwelfare.org.au" class="font-medium text-[var(--cawc-green)] underline">cawcnsw@cambodianwelfare.org.au</a>.
+            </p>
+        {% else %}
+            <h1 class="text-3xl font-black tracking-tight text-[var(--cawc-text-strong)] sm:text-4xl">Check your inbox</h1>
+            <p class="mt-4 text-lg leading-relaxed text-slate-600">
+                We've sent a confirmation link to your email address. Click it to complete your subscription.
+            </p>
+            <p class="mt-3 text-sm text-slate-500">
+                The link expires in 48 hours. If you don't see the email, check your spam folder.
+            </p>
+        {% endif %}
+        <a href="/" class="cawc-donate-btn mt-10 inline-block">Back to home</a>
+    </div>
+</section>
+{% endblock %}

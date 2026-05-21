@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Subscription Confirmed | CAWC NSW{% endblock %}
+
+{% block extra_head %}
+<style>
+    .icon-circle {
+        animation: icon-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    }
+    @keyframes icon-pop {
+        from { transform: scale(0.4); opacity: 0; }
+        to   { transform: scale(1);   opacity: 1; }
+    }
+    .check-path {
+        stroke-dasharray: 40;
+        stroke-dashoffset: 40;
+        animation: draw-check 0.45s cubic-bezier(0.65, 0, 0.45, 1) 0.35s forwards;
+    }
+    @keyframes draw-check {
+        to { stroke-dashoffset: 0; }
+    }
+    .confirmed-text {
+        animation: fade-up 0.5s ease 0.5s both;
+    }
+    @keyframes fade-up {
+        from { opacity: 0; transform: translateY(10px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="bg-[linear-gradient(180deg,#FAFAF7_0%,#F4F1EA_100%)] py-24 lg:py-36">
+    <div class="mx-auto w-full max-w-[680px] px-5 text-center sm:px-6 lg:px-8">
+        <div class="icon-circle mx-auto mb-8 flex h-20 w-20 items-center justify-center rounded-full bg-[var(--cawc-green)]/10">
+            <svg class="h-10 w-10 text-[var(--cawc-green)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path class="check-path" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                    d="M5 13l4 4L19 7"/>
+            </svg>
+        </div>
+        <div class="confirmed-text">
+            <h1 class="text-3xl font-black tracking-tight text-[var(--cawc-text-strong)] sm:text-4xl">You're subscribed!</h1>
+            <p class="mt-4 text-lg leading-relaxed text-slate-600">
+                Welcome to the CAWC NSW community. We'll be in touch with news, events, and updates.
+            </p>
+            <div class="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+                <a href="/" class="cawc-donate-btn w-full min-w-[180px] sm:w-auto">Back to home</a>
+                <a href="/events/" class="inline-flex min-h-[44px] w-full min-w-[180px] items-center justify-center rounded-full border border-[var(--cawc-green)] px-7 py-3 text-[15px] font-semibold leading-none text-[var(--cawc-green)] transition hover:bg-[var(--cawc-green)]/10 sm:w-auto">
+                    Explore events
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

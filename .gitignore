@@ -1,0 +1,60 @@
+# Python cache / build
+__pycache__/
+*.py[oc]
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+build/
+dist/
+wheels/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Local databases / dev artifacts
+db.sqlite3
+db.sqlite3-journal
+*.sqlite3
+*.sqlite3-journal
+
+# Django local files
+staticfiles/
+
+# Portfolio demo media is intentionally committed so the site looks complete
+# when reviewed locally. Do not commit production uploads or secrets.
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Claude / planning files
+docs/
+CLAUDE.md
+CLAUDE.local.md
+.claude/
+.agents/
+AGENTS.md
+skills/
+
+# Tailwind binary and generated daisyUI files (large, OS-specific)
+static/css/tailwindcss
+static/css/tailwindcss.exe
+static/css/daisyui.mjs
+static/css/daisyui-theme.mjs
+
+# Editor / OS files
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+README.new.md

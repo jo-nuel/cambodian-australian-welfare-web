@@ -1,0 +1,57 @@
+{% load wagtailcore_tags %}
+<footer id="contact" class="bg-[linear-gradient(180deg,#143428_0%,#102436_100%)] text-[#d7ddea]">
+    <div class="mx-auto grid w-full max-w-[1180px] gap-10 px-5 py-12 sm:px-6 lg:grid-cols-[1.35fr_0.75fr_0.95fr_1fr] lg:px-8">
+        <div>
+            <p class="text-[11px] font-black uppercase tracking-[0.24em] text-white">Logo</p>
+            <p class="mt-4 max-w-[245px] text-[10px] leading-5 cawc-navy-copy">
+                Empowering and supporting Cambodian communities across NSW through advocacy, education, and community-led programs.
+            </p>
+            <div class="mt-6 flex gap-3">
+                <span class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[10px] font-semibold text-white transition hover:bg-white/10">in</span>
+                <span class="flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-[10px] font-semibold text-white transition hover:bg-white/10">f</span>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-[11px] font-semibold text-white">Quick Links</h2>
+            <div class="mt-4 space-y-2 text-[10px] cawc-navy-copy">
+                <a href="/" class="block transition hover:text-white">About Us</a>
+                {% with footer_pages=request.site.root_page.get_children.live.public.specific %}
+                    {% for footer_page in footer_pages %}
+                        <a href="{{ footer_page.url }}" class="block transition hover:text-white">{{ footer_page.title }}</a>
+                    {% endfor %}
+                {% endwith %}
+                <a href="#" class="block transition hover:text-white">Privacy Policy</a>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-[11px] font-semibold text-white">Contact</h2>
+            <div class="mt-4 space-y-3 text-[10px] leading-5 cawc-navy-copy">
+                <p>cawcnsw@cambodianwelfare.org.au</p>
+                <a href="https://www.facebook.com/cambodianwelfare" target="_blank" rel="noopener" class="hover:text-white transition-colors">facebook.com/cambodianwelfare</a>
+                <p>Fairfield, NSW, Australia</p>
+            </div>
+        </div>
+
+        <div>
+            <h2 class="text-[11px] font-semibold text-white">Newsletter</h2>
+            <p class="mt-4 text-[10px] leading-5 cawc-navy-copy">
+                Stay updated on upcoming programs, events, and new community resources.
+            </p>
+            <form class="mt-5 flex gap-2">
+                <input type="email" placeholder="Email address" class="h-10 w-full rounded-xl border border-white/10 bg-white/6 px-3 text-[10px] text-white outline-none placeholder:text-[#8e9ab0] transition focus:border-white/30">
+                <button type="button" class="inline-flex h-10 items-center justify-center rounded-xl bg-white px-4 text-[10px] font-semibold text-[#143428] transition hover:bg-[#eef3ef]">
+                    Join
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div class="border-t border-white/10">
+        <div class="mx-auto flex w-full max-w-[1180px] flex-col gap-2 px-5 py-4 text-[9px] cawc-navy-copy sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+            <p>&copy; {% now "Y" %} Cambodian-Australian Welfare Council NSW. All rights reserved.</p>
+            <p>Powered by Wagtail CMS</p>
+        </div>
+    </div>
+</footer>

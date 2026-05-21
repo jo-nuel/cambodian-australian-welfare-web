@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@source not "./tailwindcss";
+@source not "./daisyui{,*}.mjs";
+@source "../../templates/**/*.html";
+@source "../../a_home/templates/**/*.html";
+@source "../../a_programs/templates/**/*.html";
+@source "../../a_about/templates/**/*.html";
+@source "../../a_events/templates/**/*.html";
+@source "../../a_resources/templates/**/*.html";
+@source "../../a_contact/templates/**/*.html";
+
+/* DaisyUI removed — its abyss dark theme was setting color-scheme: dark
+   globally, causing browser form controls and scroll bars to render in
+   dark mode. All styling uses custom --cawc-* design tokens instead. */
+
+.richtext h1 { font-size: 2.25rem; font-weight: 700; margin-bottom: 1rem; }
+.richtext h2 { font-size: 1.875rem; font-weight: 700; margin-bottom: 0.75rem; }
+.richtext h3 { font-size: 1.5rem; font-weight: 600; margin-bottom: 0.75rem; }
+.richtext h4 { font-size: 1.25rem; font-weight: 600; margin-bottom: 0.5rem; }
+.richtext p  { font-size: 1rem; margin-bottom: 0.75rem; }
+.richtext ul { list-style: disc; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.richtext ol { list-style: decimal; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+.richtext a  { text-decoration: underline; }

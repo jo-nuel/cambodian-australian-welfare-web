@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Page not found | CAWC NSW{% endblock %}
+{% block og_title %}Page not found — CAWC NSW{% endblock %}
+{% block og_description %}The page you were looking for could not be found. Visit the CAWC NSW homepage to find what you need.{% endblock %}
+
+{% block content %}
+
+<section class="bg-[linear-gradient(160deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)] min-h-[420px] flex items-center">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-20 sm:px-6 lg:px-8">
+        <p class="cawc-eyebrow-light">404</p>
+        <h1 class="mt-4 max-w-[700px] text-[3rem] font-black leading-[1] tracking-[-0.04em] text-white sm:text-[4rem]">
+            We couldn't find that page.
+        </h1>
+        <p class="mt-6 max-w-[560px] text-[17px] leading-[1.8] text-white/70">
+            It may have moved, been renamed, or the link might have a typo. Try heading back to the homepage or using the navigation above.
+        </p>
+        <div class="mt-10 flex flex-wrap gap-4">
+            <a href="/" class="cawc-donate-btn">Go to homepage</a>
+            <a href="/programs/"
+               class="inline-flex h-12 items-center justify-center rounded-full border border-white/25 px-7 text-[14px] font-semibold text-white transition hover:bg-white/10">
+                Browse programs
+            </a>
+        </div>
+    </div>
+</section>
+
+<section class="bg-[var(--cawc-bg)] py-16">
+    <div class="mx-auto w-full max-w-[1180px] px-5 sm:px-6 lg:px-8">
+        <p class="text-[13px] font-semibold uppercase tracking-[0.15em] text-[var(--cawc-green)]">Helpful links</p>
+        <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <a href="/about/" class="flex items-center gap-3 rounded-xl bg-[var(--cawc-surface)] p-5 ring-1 ring-[var(--cawc-border)]/30 transition hover:ring-[var(--cawc-green)]/40">
+                <span class="text-[15px] font-semibold text-[var(--cawc-heading)]">Who We Are</span>
+            </a>
+            <a href="/programs/" class="flex items-center gap-3 rounded-xl bg-[var(--cawc-surface)] p-5 ring-1 ring-[var(--cawc-border)]/30 transition hover:ring-[var(--cawc-green)]/40">
+                <span class="text-[15px] font-semibold text-[var(--cawc-heading)]">Programs</span>
+            </a>
+            <a href="/events/" class="flex items-center gap-3 rounded-xl bg-[var(--cawc-surface)] p-5 ring-1 ring-[var(--cawc-border)]/30 transition hover:ring-[var(--cawc-green)]/40">
+                <span class="text-[15px] font-semibold text-[var(--cawc-heading)]">Events</span>
+            </a>
+            <a href="/contact/" class="flex items-center gap-3 rounded-xl bg-[var(--cawc-surface)] p-5 ring-1 ring-[var(--cawc-border)]/30 transition hover:ring-[var(--cawc-green)]/40">
+                <span class="text-[15px] font-semibold text-[var(--cawc-heading)]">Contact</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

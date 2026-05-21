@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block title %}{{ page.title }} | CAWC NSW{% endblock %}
+{% block og_title %}{{ page.title }} — CAWC NSW{% endblock %}
+{% block og_description %}{% if page.search_description %}{{ page.search_description }}{% else %}Photos from CAWC NSW community events, cultural celebrations, and programs — moments from our community in action.{% endif %}{% endblock %}
+
+{% block extra_head %}
+    {% include "a_gallery/includes/gallery_masonry_styles.html" %}
+{% endblock %}
+
+{% block content %}
+
+{# ── Hero ─────────────────────────────────────────────────────────────────── #}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-10 pt-14 sm:px-6 lg:px-8 lg:pb-12 lg:pt-18">
+        <p class="cawc-eyebrow">
+            {{ page.intro_eyebrow_display }}
+        </p>
+        <h1 class="mt-4 max-w-[900px] text-[2.65rem] font-black leading-[0.95] tracking-[-0.05em] text-[var(--cawc-heading)] sm:text-[3.45rem] lg:text-[4.15rem]">
+            {{ page.intro_title_display }}
+        </h1>
+        <div class="mt-6 max-w-[720px] text-[17px] leading-[1.78] text-[var(--cawc-copy)] [&_p]:mb-4 [&_p:last-child]:mb-0">
+            {{ page.intro_text_display|richtext }}
+        </div>
+        {% if total_count %}
+            <div class="mt-7 inline-flex items-center gap-2 rounded-full bg-[var(--cawc-surface)] px-4 py-2 shadow-[0_8px_20px_-8px_rgba(15,41,34,0.10)]">
+                <span class="h-2 w-2 rounded-full bg-[var(--cawc-green)]"></span>
+                <span class="text-[12px] font-semibold text-[var(--cawc-copy)]">
+                    {{ total_count }} photo{{ total_count|pluralize }} across {{ categories|length }} categories
+                </span>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+
+{# ── Category navigation cards ────────────────────────────────────────────── #}
+{% if categories %}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-12 sm:px-6 lg:px-8">
+        <div class="grid gap-4 sm:grid-cols-3">
+            {% for cat in categories %}
+                <a href="{{ cat.url }}"
+                   class="group relative flex h-[200px] flex-col justify-end overflow-hidden rounded-2xl bg-[var(--cawc-green-deep)] shadow-[0_18px_42px_-22px_rgba(15,41,34,0.18)] transition hover:-translate-y-1 hover:shadow-[0_24px_50px_-22px_rgba(15,41,34,0.28)]">
+                    {% if cat.cover %}
+                        {% image cat.cover width-720 class="absolute inset-0 h-full w-full object-cover opacity-80 transition duration-500 group-hover:scale-105 group-hover:opacity-90" %}
+                        <div class="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,41,34,0)_0%,rgba(15,41,34,0.85)_100%)]"></div>
+                    {% else %}
+                        <div class="absolute inset-0 bg-[linear-gradient(135deg,#1a3d32_0%,#0f2922_100%)]"></div>
+                    {% endif %}
+                    <div class="relative px-6 pb-5">
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.22em] text-[rgba(176,205,194,0.85)]">
+                            {{ cat.eyebrow }}
+                        </p>
+                        <div class="mt-2 flex items-end justify-between gap-3">
+                            <h2 class="text-[20px] font-black leading-tight tracking-[-0.02em] text-white">
+                                {{ cat.title }}
+                            </h2>
+                            <span class="shrink-0 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold text-white backdrop-blur-sm">
+                                {{ cat.count }}
+                            </span>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+
+{# ── Filter chips + masonry ───────────────────────────────────────────────── #}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-16 sm:px-6 lg:px-8 lg:pb-20">
+
+        {% if total_count %}
+            <div class="mb-8 flex flex-wrap items-center gap-2">
+                <p class="mr-2 text-[11px] font-semibold uppercase tracking-[0.18em] text-[var(--cawc-copy)]/65">Filter</p>
+                {% for chip in filter_chips %}
+                    {% if chip.value == active_category %}
+                        <span class="inline-flex h-9 items-center gap-2 rounded-full bg-[var(--cawc-green)] px-4 text-[13px] font-semibold text-white shadow-[0_4px_12px_-4px_rgba(30,111,86,0.45)]">
+                            {{ chip.label }}
+                            <span class="rounded-full bg-white/20 px-1.5 text-[11px] font-bold">{{ chip.count }}</span>
+                        </span>
+                    {% else %}
+                        <a href="?{% if chip.value %}category={{ chip.value }}{% endif %}"
+                           class="inline-flex h-9 items-center gap-2 rounded-full border border-[var(--cawc-border)]/40 bg-[var(--cawc-surface)] px-4 text-[13px] font-semibold text-[var(--cawc-copy)] transition hover:border-[var(--cawc-green)]/40 hover:text-[var(--cawc-green)]">
+                            {{ chip.label }}
+                            <span class="rounded-full bg-[var(--cawc-surface-soft)] px-1.5 text-[11px] font-bold">{{ chip.count }}</span>
+                        </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% if filtered_entries %}
+            {% include "a_gallery/includes/gallery_masonry_block.html" with entries=filtered_entries initial_visible=16 batch_size=12 empty_message="No photos in this category yet." %}
+        {% elif active_category %}
+            <div class="rounded-2xl bg-[var(--cawc-surface)] px-8 py-14 text-center shadow-[0_18px_42px_-24px_rgba(15,41,34,0.12)]">
+                <div class="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-[var(--cawc-surface-soft)] text-[var(--cawc-green)]">
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.8"/>
+                        <circle cx="9" cy="9" r="2" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="m21 15-5-5L5 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <p class="mt-5 text-[16px] font-semibold text-[var(--cawc-heading)]">No photos in this category yet</p>
+                <p class="mt-2 text-[14px] text-[var(--cawc-copy)]">Photos will appear here once added in Wagtail.</p>
+                <a href="{{ page.url }}" class="mt-6 inline-flex items-center gap-2 text-[13px] font-semibold text-[var(--cawc-green)] transition hover:gap-3">
+                    View all photos
+                    <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
+        {% else %}
+            {% include "a_gallery/includes/gallery_masonry_block.html" with entries=filtered_entries initial_visible=16 batch_size=12 empty_message="Add images to the Community Photos, Program Photos, and Event Photos pages in Wagtail to build this gallery." %}
+        {% endif %}
+
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+    {% include "a_gallery/includes/gallery_masonry_scripts.html" %}
+{% endblock %}

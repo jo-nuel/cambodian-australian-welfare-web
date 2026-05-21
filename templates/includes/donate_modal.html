@@ -1,0 +1,290 @@
+{% load static %}
+{# ── Donation modal ────────────────────────────────────────────────────────── #}
+{# Triggered by any element with data-donate-open                              #}
+{# Stripe Checkout: posts to /donate/checkout/ and redirects to Stripe         #}
+
+<div id="donate-modal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="donate-modal-title"
+     class="fixed inset-0 z-[200] flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-200">
+
+    {# Backdrop #}
+    <div id="donate-backdrop"
+         class="absolute inset-0 bg-[rgba(10,25,20,0.6)] backdrop-blur-sm"></div>
+
+    {# Panel #}
+    <div class="relative w-full max-w-[480px] overflow-hidden rounded-[28px] bg-white shadow-[0_40px_80px_-20px_rgba(10,25,20,0.35)]">
+
+        {# Header #}
+        <div class="bg-[linear-gradient(135deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)] px-7 py-6">
+            <div class="flex items-start justify-between gap-4">
+                <div>
+                    <p class="text-[11px] font-semibold uppercase tracking-[0.22em] text-[rgba(176,205,194,0.75)]">Support CAWC NSW</p>
+                    <h2 id="donate-modal-title" class="mt-1 text-[1.5rem] font-black tracking-[-0.03em] text-white">
+                        Make a Donation
+                    </h2>
+                </div>
+                <button id="donate-close"
+                        type="button"
+                        aria-label="Close donation modal"
+                        class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition hover:bg-white/20">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M18 6 6 18M6 6l12 12" stroke="currentColor" stroke-width="2"
+                              stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        {# Body #}
+        <div class="px-7 py-6">
+
+            {# One-time / Monthly toggle #}
+            <div class="flex gap-1 rounded-xl bg-[var(--cawc-surface-soft)] p-1">
+                <button type="button" data-frequency="one-time"
+                        class="donate-freq flex-1 rounded-[10px] py-2 text-[13px] font-semibold transition
+                               bg-white text-[var(--cawc-green)] shadow-sm">
+                    One-time
+                </button>
+                <button type="button" data-frequency="monthly"
+                        class="donate-freq flex-1 rounded-[10px] py-2 text-[13px] font-semibold transition
+                               text-[var(--cawc-copy)] hover:text-[var(--cawc-heading)]">
+                    Monthly
+                </button>
+            </div>
+
+            {# Amount presets #}
+            <p class="mt-5 text-[12px] font-semibold uppercase tracking-[0.16em] text-[var(--cawc-copy)]">
+                Select an amount (AUD)
+            </p>
+            <div id="donate-presets" class="mt-2.5 grid grid-cols-4 gap-2">
+                <button type="button" data-amount="25"
+                        class="donate-preset rounded-xl border border-[var(--cawc-border)]/40 py-3 text-[15px] font-bold text-[var(--cawc-heading)] transition hover:border-[var(--cawc-green)] hover:text-[var(--cawc-green)]">
+                    $25
+                </button>
+                <button type="button" data-amount="50"
+                        class="donate-preset rounded-xl border border-[var(--cawc-border)]/40 py-3 text-[15px] font-bold text-[var(--cawc-heading)] transition hover:border-[var(--cawc-green)] hover:text-[var(--cawc-green)]">
+                    $50
+                </button>
+                <button type="button" data-amount="100"
+                        class="donate-preset rounded-xl border border-[var(--cawc-border)]/40 py-3 text-[15px] font-bold text-[var(--cawc-heading)] transition hover:border-[var(--cawc-green)] hover:text-[var(--cawc-green)]">
+                    $100
+                </button>
+                <button type="button" data-amount="250"
+                        class="donate-preset rounded-xl border border-[var(--cawc-border)]/40 py-3 text-[15px] font-bold text-[var(--cawc-heading)] transition hover:border-[var(--cawc-green)] hover:text-[var(--cawc-green)]">
+                    $250
+                </button>
+            </div>
+
+            {# Custom amount #}
+            <div class="mt-2.5 flex items-center gap-2 rounded-xl border border-[var(--cawc-border)]/40 px-4 py-2.5
+                        focus-within:border-[var(--cawc-green)] focus-within:ring-2 focus-within:ring-[var(--cawc-green)]/20">
+                <span class="text-[15px] font-bold text-[var(--cawc-copy)]">$</span>
+                <input id="donate-custom"
+                       type="number"
+                       min="1"
+                       placeholder="Custom amount"
+                       class="flex-1 bg-transparent text-[15px] font-bold text-[var(--cawc-heading)] placeholder:font-normal placeholder:text-[var(--cawc-copy)]/50 focus:outline-none">
+            </div>
+
+            {# Selected summary #}
+            <p id="donate-summary" class="mt-4 text-[13px] text-[var(--cawc-copy)]">
+                You are donating <strong class="text-[var(--cawc-heading)]" id="donate-summary-amount">$50</strong>
+                <span id="donate-summary-frequency">one-time</span>.
+            </p>
+
+            {# Stripe checkout button #}
+            <button id="donate-submit"
+                    type="button"
+                    class="mt-4 w-full rounded-xl bg-[var(--cawc-green)] py-3.5 text-[15px] font-semibold text-white transition hover:bg-[var(--cawc-green-strong)] disabled:opacity-50">
+                Donate with Stripe
+            </button>
+
+            {# Error message #}
+            <p id="donate-error" class="mt-3 hidden text-[13px] text-red-600"></p>
+
+        </div>
+
+        {# Footer note + learn more link #}
+        <div class="border-t border-[var(--cawc-border)]/20 px-7 py-4">
+            <p class="text-[12px] leading-[1.6] text-[var(--cawc-copy)]/70">
+                Donations support CAWC NSW community programs. All transactions are processed securely via Stripe.
+                CAWC NSW is a registered not-for-profit organisation.
+            </p>
+            <a href="/donate/"
+               class="mt-2.5 inline-flex items-center gap-1.5 text-[12px] font-semibold text-[var(--cawc-green)] transition hover:gap-2">
+                Learn more about donating
+                <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<script>
+(function () {
+    // ── State ──────────────────────────────────────────────────────────────
+    let selectedAmount = 50;
+    let selectedFrequency = 'one-time';
+
+    const PRESETS = {
+        'one-time': [25, 50, 100, 250],
+        'monthly':  [10, 15, 25, 50],
+    };
+
+    // ── DOM refs ───────────────────────────────────────────────────────────
+    const modal       = document.getElementById('donate-modal');
+    const backdrop    = document.getElementById('donate-backdrop');
+    const closeBtn    = document.getElementById('donate-close');
+    const customInput = document.getElementById('donate-custom');
+    const summaryAmt  = document.getElementById('donate-summary-amount');
+    const summaryFreq = document.getElementById('donate-summary-frequency');
+    const presetsEl   = document.getElementById('donate-presets');
+    const submitBtn   = document.getElementById('donate-submit');
+    const errorEl     = document.getElementById('donate-error');
+
+    // ── Open / Close ───────────────────────────────────────────────────────
+    function openModal() {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        modal.classList.add('opacity-0', 'pointer-events-none');
+        document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('[data-donate-open]').forEach(function (el) {
+        el.addEventListener('click', function (e) { e.preventDefault(); openModal(); });
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+    backdrop.addEventListener('click', closeModal);
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeModal();
+    });
+
+    // ── Preset rendering ───────────────────────────────────────────────────
+    function renderPresets(frequency) {
+        const amounts = PRESETS[frequency];
+        presetsEl.innerHTML = amounts.map(function (amt) {
+            return '<button type="button" data-amount="' + amt + '" ' +
+                   'class="donate-preset rounded-xl border border-[var(--cawc-border)]/40 py-3 text-[15px] font-bold text-[var(--cawc-heading)] transition hover:border-[var(--cawc-green)] hover:text-[var(--cawc-green)]">' +
+                   '$' + amt + '</button>';
+        }).join('');
+        bindPresets();
+        const defaultBtn = presetsEl.querySelectorAll('.donate-preset')[1];
+        if (defaultBtn) {
+            selectedAmount = parseInt(defaultBtn.dataset.amount, 10);
+            highlightPreset(defaultBtn);
+        }
+        customInput.value = '';
+        updateSummary();
+    }
+
+    function bindPresets() {
+        presetsEl.querySelectorAll('.donate-preset').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                selectedAmount = parseInt(btn.dataset.amount, 10);
+                customInput.value = '';
+                highlightPreset(btn);
+                updateSummary();
+            });
+        });
+    }
+
+    customInput.addEventListener('input', function () {
+        const val = parseFloat(customInput.value);
+        if (val > 0) {
+            selectedAmount = val;
+            clearPresets();
+            updateSummary();
+        }
+    });
+
+    function highlightPreset(active) {
+        presetsEl.querySelectorAll('.donate-preset').forEach(function (btn) {
+            btn.classList.remove('bg-[var(--cawc-green)]', 'text-white', 'border-[var(--cawc-green)]');
+            btn.classList.add('border-[var(--cawc-border)]/40', 'text-[var(--cawc-heading)]');
+        });
+        active.classList.add('bg-[var(--cawc-green)]', 'text-white', 'border-[var(--cawc-green)]');
+        active.classList.remove('border-[var(--cawc-border)]/40', 'text-[var(--cawc-heading)]');
+    }
+
+    function clearPresets() {
+        presetsEl.querySelectorAll('.donate-preset').forEach(function (btn) {
+            btn.classList.remove('bg-[var(--cawc-green)]', 'text-white', 'border-[var(--cawc-green)]');
+            btn.classList.add('border-[var(--cawc-border)]/40', 'text-[var(--cawc-heading)]');
+        });
+    }
+
+    bindPresets();
+    const defaultPreset = presetsEl.querySelector('.donate-preset[data-amount="50"]');
+    if (defaultPreset) highlightPreset(defaultPreset);
+
+    // ── Frequency toggle ───────────────────────────────────────────────────
+    document.querySelectorAll('.donate-freq').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            selectedFrequency = btn.dataset.frequency;
+            document.querySelectorAll('.donate-freq').forEach(function (b) {
+                b.classList.remove('bg-white', 'text-[var(--cawc-green)]', 'shadow-sm');
+                b.classList.add('text-[var(--cawc-copy)]');
+            });
+            btn.classList.add('bg-white', 'text-[var(--cawc-green)]', 'shadow-sm');
+            btn.classList.remove('text-[var(--cawc-copy)]');
+            renderPresets(selectedFrequency);
+        });
+    });
+
+    // ── Summary ────────────────────────────────────────────────────────────
+    function updateSummary() {
+        summaryAmt.textContent  = '$' + selectedAmount;
+        summaryFreq.textContent = selectedFrequency === 'monthly' ? 'per month' : 'one-time';
+    }
+    updateSummary();
+
+    // ── Stripe checkout ────────────────────────────────────────────────────
+    function getCsrfToken() {
+        const cookie = document.cookie.split('; ').find(function (c) {
+            return c.startsWith('csrftoken=');
+        });
+        return cookie ? cookie.split('=')[1] : '';
+    }
+
+    submitBtn.addEventListener('click', function () {
+        errorEl.classList.add('hidden');
+        errorEl.textContent = '';
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Redirecting…';
+
+        fetch('/donate/checkout/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCsrfToken(),
+            },
+            body: JSON.stringify({
+                amount: selectedAmount,
+                frequency: selectedFrequency,
+            }),
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (data.url) {
+                window.location.href = data.url;
+            } else {
+                throw new Error(data.error || 'Something went wrong.');
+            }
+        })
+        .catch(function (err) {
+            errorEl.textContent = err.message;
+            errorEl.classList.remove('hidden');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Donate with Stripe';
+        });
+    });
+})();
+</script>

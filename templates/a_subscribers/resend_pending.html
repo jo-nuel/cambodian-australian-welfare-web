@@ -1,0 +1,56 @@
+{% extends "wagtailadmin/base.html" %}
+{% load wagtailadmin_tags i18n %}
+
+{% block titletag %}Resend Confirmation Emails | Wagtail{% endblock %}
+
+{% block content %}
+<div class="nice-padding">
+
+    <header class="w-header">
+        <div class="w-header__wrapper">
+            <div class="w-header__title-wrapper">
+                <h1 class="w-header__title">Resend Confirmation Emails</h1>
+            </div>
+        </div>
+    </header>
+
+    <div style="max-width:580px;margin-top:28px;">
+
+        {% if stale_count %}
+        <div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;padding:20px 24px;margin-bottom:20px;">
+            <p style="margin:0 0 4px;font-size:13px;color:#6b7280;">Pending for more than 7 days</p>
+            <p style="margin:0;font-size:32px;font-weight:900;color:#d97706;">{{ stale_count }} subscriber{{ stale_count|pluralize }}</p>
+        </div>
+
+        <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:16px 20px;margin-bottom:24px;">
+            <p style="margin:0;font-size:14px;color:#92400e;line-height:1.5;">
+                Each subscriber will receive a fresh confirmation email with a new 48-hour link.
+                People who don't respond are likely bots or abandoned signups and can be ignored.
+            </p>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+                <button type="submit" class="button">
+                    Resend to {{ stale_count }} subscriber{{ stale_count|pluralize }}
+                </button>
+                <a href="{% url 'subscriber_dashboard' %}" class="button button-secondary">Cancel</a>
+            </div>
+        </form>
+
+        {% else %}
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:20px 24px;">
+            <p style="margin:0;font-size:15px;color:#166534;font-weight:600;">
+                No stale pending subscribers — everyone has either confirmed or signed up recently.
+            </p>
+        </div>
+        <div style="margin-top:16px;">
+            <a href="{% url 'subscriber_dashboard' %}" class="button button-secondary">Back to Dashboard</a>
+        </div>
+        {% endif %}
+
+    </div>
+
+</div>
+{% endblock %}

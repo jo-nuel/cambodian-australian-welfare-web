@@ -1,0 +1,360 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block title %}{{ page.title }} | CAWC NSW{% endblock %}
+
+{% block content %}
+
+{# ── Header ───────────────────────────────────────────────────────────────── #}
+<section class="bg-[linear-gradient(160deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-16 pt-12 sm:px-6 lg:px-8 lg:pb-20 lg:pt-16">
+        <div class="max-w-[760px]">
+            <p class="cawc-eyebrow-light">Community</p>
+            <h1 class="mt-4 text-[2.5rem] font-black leading-[1.0] tracking-[-0.04em] text-white sm:text-[3.4rem] lg:text-[4rem]">
+                {{ page.title }}
+            </h1>
+            <div class="mt-6 text-[18px] leading-[1.75] text-white/75 [&_p]:mb-4 [&_p:last-child]:mb-0">
+                {{ page.intro_display|richtext }}
+            </div>
+        </div>
+
+        {# Quick-jump links #}
+        <div class="mt-8 flex flex-wrap gap-3">
+            <button type="button" id="btn-volunteer"
+               onclick="toggleDesc('volunteer')"
+               class="inline-flex h-10 items-center justify-center rounded-full border border-white/20 px-5 text-[13px] font-semibold text-white transition hover:bg-white/10">
+                Volunteer
+            </button>
+            <button type="button" id="btn-internship"
+               onclick="toggleDesc('internship')"
+               class="inline-flex h-10 items-center justify-center rounded-full border border-white/20 px-5 text-[13px] font-semibold text-white transition hover:bg-white/10">
+                Internship
+            </button>
+            <a href="#expression-of-interest"
+               class="inline-flex h-10 items-center justify-center rounded-full bg-white px-5 text-[13px] font-semibold text-[var(--cawc-green)] transition hover:bg-[#eef4f1]">
+                Express Interest
+            </a>
+        </div>
+
+        {# Toggle description panels #}
+        <div id="desc-volunteer" class="hidden mt-6 max-w-[720px] text-[16px] leading-[1.8] text-white/80 [&_p]:mb-4 [&_p:last-child]:mb-0">
+            {{ page.volunteer_intro_display|richtext }}
+        </div>
+        <div id="desc-internship" class="hidden mt-6 max-w-[720px] text-[16px] leading-[1.8] text-white/80 [&_p]:mb-4 [&_p:last-child]:mb-0">
+            {{ page.internship_intro_display|richtext }}
+        </div>
+
+        <script>
+        function toggleDesc(key) {
+            var panels = ['volunteer', 'internship'];
+            var btns = { volunteer: document.getElementById('btn-volunteer'), internship: document.getElementById('btn-internship') };
+            panels.forEach(function(k) {
+                var panel = document.getElementById('desc-' + k);
+                var btn = btns[k];
+                if (k === key) {
+                    var isOpen = !panel.classList.contains('hidden');
+                    panel.classList.toggle('hidden', isOpen);
+                    btn.classList.toggle('bg-white/20', !isOpen);
+                } else {
+                    panel.classList.add('hidden');
+                    btn.classList.remove('bg-white/20');
+                }
+            });
+        }
+        </script>
+    </div>
+</section>
+
+{# ── Featured image ───────────────────────────────────────────────────────── #}
+{% if page.featured_image %}
+<div class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 sm:px-6 lg:px-8">
+        <div class="overflow-hidden rounded-[24px] shadow-[0_20px_60px_-12px_rgba(15,41,34,0.16)]">
+            {% image page.featured_image width-1400 class="w-full object-cover max-h-[480px]" %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{# ── Volunteer section ────────────────────────────────────────────────────── #}
+<section id="volunteer" class="bg-[var(--cawc-bg)] scroll-mt-20">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+
+        <div class="flex items-center gap-3 mb-3">
+            <span class="h-px flex-1 max-w-[40px] bg-[var(--cawc-green)]/30"></span>
+            <p class="cawc-eyebrow">Get Involved</p>
+        </div>
+        <h2 class="text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)] sm:text-[2.4rem]">
+            {{ page.volunteer_heading_display }}
+        </h2>
+
+        {% if page.volunteer_roles_display %}
+        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {% for role in page.volunteer_roles_display %}
+            <div class="rounded-2xl bg-[var(--cawc-surface)] p-6 shadow-[0_20px_50px_-12px_rgba(15,41,34,0.06)]">
+                {% if role.icon %}
+                <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--cawc-surface-soft)] text-[var(--cawc-green)] font-bold text-[15px]">
+                    {{ role.icon }}
+                </div>
+                {% endif %}
+                <h3 class="text-[1rem] font-bold text-[var(--cawc-heading)]">{{ role.title }}</h3>
+                {% if role.commitment %}
+                <p class="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--cawc-green)]">{{ role.commitment }}</p>
+                {% endif %}
+                <p class="mt-3 text-[14px] leading-[1.75] text-[var(--cawc-copy)]">{{ role.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="mt-8">
+            <a href="#expression-of-interest"
+               class="inline-flex h-11 items-center justify-center rounded-full bg-[var(--cawc-green)] px-7 text-[14px] font-semibold text-white transition hover:scale-[1.02] hover:bg-[var(--cawc-green-strong)]">
+                Express Your Interest
+            </a>
+        </div>
+    </div>
+</section>
+
+{# ── Divider ──────────────────────────────────────────────────────────────── #}
+<div class="mx-auto max-w-[1180px] px-5 sm:px-6 lg:px-8">
+    <div class="border-t border-[var(--cawc-border)]/40"></div>
+</div>
+
+{# ── Internship section ───────────────────────────────────────────────────── #}
+<section id="internship" class="bg-[var(--cawc-bg)] scroll-mt-20">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+
+        <div class="flex items-center gap-3 mb-3">
+            <span class="h-px flex-1 max-w-[40px] bg-[var(--cawc-green)]/30"></span>
+            <p class="cawc-eyebrow">Get Involved</p>
+        </div>
+        <h2 class="text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)] sm:text-[2.4rem]">
+            {{ page.internship_heading_display }}
+        </h2>
+
+        {% if page.internship_roles_display %}
+        <div class="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {% for role in page.internship_roles_display %}
+            <div class="rounded-2xl bg-[var(--cawc-surface)] p-6 shadow-[0_20px_50px_-12px_rgba(15,41,34,0.06)]">
+                {% if role.icon %}
+                <div class="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--cawc-surface-soft)] text-[var(--cawc-green)] font-bold text-[15px]">
+                    {{ role.icon }}
+                </div>
+                {% endif %}
+                <h3 class="text-[1rem] font-bold text-[var(--cawc-heading)]">{{ role.title }}</h3>
+                {% if role.commitment %}
+                <p class="mt-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-[var(--cawc-green)]">{{ role.commitment }}</p>
+                {% endif %}
+                <p class="mt-3 text-[14px] leading-[1.75] text-[var(--cawc-copy)]">{{ role.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="mt-8">
+            <a href="#expression-of-interest"
+               class="inline-flex h-11 items-center justify-center rounded-full bg-[var(--cawc-green)] px-7 text-[14px] font-semibold text-white transition hover:scale-[1.02] hover:bg-[var(--cawc-green-strong)]">
+                Apply Now
+            </a>
+        </div>
+    </div>
+</section>
+
+{# ── Expression of Interest form ──────────────────────────────────────────── #}
+<section id="expression-of-interest" class="bg-[var(--cawc-surface-soft)] scroll-mt-20">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+
+        <div class="flex items-center gap-3 mb-3">
+            <span class="h-px flex-1 max-w-[40px] bg-[var(--cawc-green)]/30"></span>
+            <p class="cawc-eyebrow">Get Involved</p>
+        </div>
+        <h2 class="text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)] sm:text-[2.4rem]">
+            {{ page.eoi_heading_display }}
+        </h2>
+        <div class="mt-4 max-w-[680px] text-[16px] leading-[1.8] text-[var(--cawc-copy)] [&_p]:mb-4 [&_p:last-child]:mb-0">
+            {{ page.eoi_intro_display|richtext }}
+        </div>
+
+        {% if submitted %}
+        {# ── Success state ─────────────────────────────────────────────────── #}
+        <div class="mt-10 max-w-[560px] rounded-2xl bg-[var(--cawc-surface)] p-10 shadow-[0_20px_50px_-12px_rgba(15,41,34,0.07)]">
+            <div class="flex h-14 w-14 items-center justify-center rounded-full bg-[var(--cawc-green)] text-white text-2xl mb-6">
+                ✓
+            </div>
+            <h3 class="text-[1.4rem] font-black tracking-[-0.03em] text-[var(--cawc-heading)]">
+                Expression of Interest Received
+            </h3>
+            <p class="mt-4 text-[15px] leading-[1.75] text-[var(--cawc-copy)]">
+                Thank you for reaching out. A member of the CAWC NSW team will review your submission and be in touch shortly.
+            </p>
+            <a href="/"
+               class="mt-6 inline-flex h-11 items-center justify-center rounded-full bg-[var(--cawc-green)] px-7 text-[14px] font-semibold text-white transition hover:bg-[var(--cawc-green-strong)]">
+                Back to Home
+            </a>
+        </div>
+
+        {% else %}
+        {# ── Two-column layout ─────────────────────────────────────────────── #}
+        <div class="mt-10 grid gap-10 lg:grid-cols-[1fr_380px]">
+
+            {# Form card #}
+            <div class="rounded-2xl bg-[var(--cawc-surface)] p-8 shadow-[0_20px_50px_-12px_rgba(15,41,34,0.07)]">
+                <form method="post" novalidate>
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                    <div class="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-700">
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+
+                    <div class="grid gap-5 sm:grid-cols-2">
+
+                        {# Full name #}
+                        <div class="sm:col-span-2">
+                            <label class="block text-[13px] font-semibold text-[var(--cawc-heading)] mb-1.5" for="{{ form.full_name.id_for_label }}">
+                                Full Name <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text" name="{{ form.full_name.html_name }}" id="{{ form.full_name.id_for_label }}"
+                                   value="{{ form.full_name.value|default:'' }}"
+                                   placeholder="Your full name"
+                                   class="h-11 w-full rounded-xl border border-[var(--cawc-border)]/50 bg-[var(--cawc-surface-soft)] px-4 text-[14px] text-[var(--cawc-heading)] outline-none placeholder:text-[var(--cawc-copy)]/50 focus:border-[var(--cawc-green)] focus:ring-2 focus:ring-[var(--cawc-green)]/10 transition {% if form.full_name.errors %}border-red-400{% endif %}">
+                            {% if form.full_name.errors %}<p class="mt-1 text-[12px] text-red-500">{{ form.full_name.errors.0 }}</p>{% endif %}
+                        </div>
+
+                        {# Email #}
+                        <div>
+                            <label class="block text-[13px] font-semibold text-[var(--cawc-heading)] mb-1.5" for="{{ form.email.id_for_label }}">
+                                Email <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email" name="{{ form.email.html_name }}" id="{{ form.email.id_for_label }}"
+                                   value="{{ form.email.value|default:'' }}"
+                                   placeholder="your@email.com"
+                                   class="h-11 w-full rounded-xl border border-[var(--cawc-border)]/50 bg-[var(--cawc-surface-soft)] px-4 text-[14px] text-[var(--cawc-heading)] outline-none placeholder:text-[var(--cawc-copy)]/50 focus:border-[var(--cawc-green)] focus:ring-2 focus:ring-[var(--cawc-green)]/10 transition {% if form.email.errors %}border-red-400{% endif %}">
+                            {% if form.email.errors %}<p class="mt-1 text-[12px] text-red-500">{{ form.email.errors.0 }}</p>{% endif %}
+                        </div>
+
+                        {# Phone #}
+                        <div>
+                            <label class="block text-[13px] font-semibold text-[var(--cawc-heading)] mb-1.5" for="{{ form.phone.id_for_label }}">
+                                Phone <span class="text-[var(--cawc-copy)]/60 font-normal">(optional)</span>
+                            </label>
+                            <input type="tel" name="{{ form.phone.html_name }}" id="{{ form.phone.id_for_label }}"
+                                   value="{{ form.phone.value|default:'' }}"
+                                   placeholder="Phone number"
+                                   class="h-11 w-full rounded-xl border border-[var(--cawc-border)]/50 bg-[var(--cawc-surface-soft)] px-4 text-[14px] text-[var(--cawc-heading)] outline-none placeholder:text-[var(--cawc-copy)]/50 focus:border-[var(--cawc-green)] focus:ring-2 focus:ring-[var(--cawc-green)]/10 transition">
+                        </div>
+
+                        {# Interest #}
+                        <div>
+                            <label class="block text-[13px] font-semibold text-[var(--cawc-heading)] mb-1.5" for="{{ form.interest.id_for_label }}">
+                                Area of Interest <span class="text-red-500">*</span>
+                            </label>
+                            <select name="{{ form.interest.html_name }}" id="{{ form.interest.id_for_label }}"
+                                    class="h-11 w-full rounded-xl border border-[var(--cawc-border)]/50 bg-[var(--cawc-surface-soft)] px-4 text-[14px] text-[var(--cawc-heading)] outline-none focus:border-[var(--cawc-green)] focus:ring-2 focus:ring-[var(--cawc-green)]/10 transition {% if form.interest.errors %}border-red-400{% endif %}">
+                                {% for val, label in form.interest.field.choices %}
+                                <option value="{{ val }}" {% if form.interest.value == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.interest.errors %}<p class="mt-1 text-[12px] text-red-500">{{ form.interest.errors.0 }}</p>{% endif %}
+                        </div>
+
+                        {# Availability #}
+                        <div>
+                            <label class="block text-[13px] font-semibold text-[var(--cawc-heading)] mb-1.5" for="{{ form.availability.id_for_label }}">
+                                Availability <span class="text-red-500">*</span>
+                            </label>
+                            <select name="{{ form.availability.html_name }}" id="{{ form.availability.id_for_label }}"
+                                    class="h-11 w-full rounded-xl border border-[var(--cawc-border)]/50 bg-[var(--cawc-surface-soft)] px-4 text-[14px] text-[var(--cawc-heading)] outline-none focus:border-[var(--cawc-green)] focus:ring-2 focus:ring-[var(--cawc-green)]/10 transition {% if form.availability.errors %}border-red-400{% endif %}">
+                                {% for val, label in form.availability.field.choices %}
+                                <option value="{{ val }}" {% if form.availability.value == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                            {% if form.availability.errors %}<p class="mt-1 text-[12px] text-red-500">{{ form.availability.errors.0 }}</p>{% endif %}
+                        </div>
+
+                        {# Skills #}
+                        <div class="sm:col-span-2">
+                            <label class="block text-[13px] font-semibold text-[var(--cawc-heading)] mb-1.5" for="{{ form.skills.id_for_label }}">
+                                Skills &amp; Experience <span class="text-[var(--cawc-copy)]/60 font-normal">(optional)</span>
+                            </label>
+                            <textarea name="{{ form.skills.html_name }}" id="{{ form.skills.id_for_label }}"
+                                      rows="3"
+                                      placeholder="Briefly describe any relevant skills or experience"
+                                      class="w-full rounded-xl border border-[var(--cawc-border)]/50 bg-[var(--cawc-surface-soft)] px-4 py-3 text-[14px] text-[var(--cawc-heading)] outline-none placeholder:text-[var(--cawc-copy)]/50 focus:border-[var(--cawc-green)] focus:ring-2 focus:ring-[var(--cawc-green)]/10 transition resize-none">{{ form.skills.value|default:'' }}</textarea>
+                        </div>
+
+                        {# Message #}
+                        <div class="sm:col-span-2">
+                            <label class="block text-[13px] font-semibold text-[var(--cawc-heading)] mb-1.5" for="{{ form.message.id_for_label }}">
+                                Additional Message <span class="text-[var(--cawc-copy)]/60 font-normal">(optional)</span>
+                            </label>
+                            <textarea name="{{ form.message.html_name }}" id="{{ form.message.id_for_label }}"
+                                      rows="4"
+                                      placeholder="Anything else you would like to share"
+                                      class="w-full rounded-xl border border-[var(--cawc-border)]/50 bg-[var(--cawc-surface-soft)] px-4 py-3 text-[14px] text-[var(--cawc-heading)] outline-none placeholder:text-[var(--cawc-copy)]/50 focus:border-[var(--cawc-green)] focus:ring-2 focus:ring-[var(--cawc-green)]/10 transition resize-none">{{ form.message.value|default:'' }}</textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-6">
+                        <button type="submit"
+                                class="inline-flex h-12 items-center justify-center rounded-full bg-[var(--cawc-green)] px-8 text-[14px] font-semibold text-white transition hover:scale-[1.02] hover:bg-[var(--cawc-green-strong)]">
+                            Submit Expression of Interest
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            {# Sidebar #}
+            <div class="space-y-6">
+
+                {# What happens next #}
+                <div class="rounded-2xl bg-[var(--cawc-surface)] p-6 shadow-[0_20px_50px_-12px_rgba(15,41,34,0.06)]">
+                    <h3 class="text-[1rem] font-bold text-[var(--cawc-heading)]">What Happens Next</h3>
+                    <ol class="mt-4 space-y-4">
+                        <li class="flex gap-3">
+                            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--cawc-green)] text-[11px] font-bold text-white mt-0.5">1</span>
+                            <div>
+                                <p class="text-[13px] font-semibold text-[var(--cawc-heading)]">Submit your form</p>
+                                <p class="mt-0.5 text-[13px] leading-[1.6] text-[var(--cawc-copy)]">Fill in your details and area of interest above.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--cawc-green)] text-[11px] font-bold text-white mt-0.5">2</span>
+                            <div>
+                                <p class="text-[13px] font-semibold text-[var(--cawc-heading)]">We review your expression</p>
+                                <p class="mt-0.5 text-[13px] leading-[1.6] text-[var(--cawc-copy)]">Our team will look at your submission within a few business days.</p>
+                            </div>
+                        </li>
+                        <li class="flex gap-3">
+                            <span class="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--cawc-green)] text-[11px] font-bold text-white mt-0.5">3</span>
+                            <div>
+                                <p class="text-[13px] font-semibold text-[var(--cawc-heading)]">We get in touch</p>
+                                <p class="mt-0.5 text-[13px] leading-[1.6] text-[var(--cawc-copy)]">A team member will contact you to discuss the next steps.</p>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+
+                {# Contact card #}
+                <div class="rounded-2xl border border-[var(--cawc-border)]/40 p-6">
+                    <h3 class="text-[1rem] font-bold text-[var(--cawc-heading)]">Prefer to reach out directly?</h3>
+                    <p class="mt-2 text-[13px] leading-[1.7] text-[var(--cawc-copy)]">
+                        You are always welcome to contact the CAWC NSW team directly by email or Facebook.
+                    </p>
+                    <div class="mt-4 space-y-2 text-[13px] text-[var(--cawc-copy)]">
+                        <p>cawcnsw@cambodianwelfare.org.au</p>
+                        <a href="https://www.facebook.com/cambodianwelfare" target="_blank" rel="noopener" class="text-[var(--cawc-green)] hover:underline">facebook.com/cambodianwelfare</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</section>
+
+{% endblock %}

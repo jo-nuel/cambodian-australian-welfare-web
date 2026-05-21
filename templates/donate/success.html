@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Thank You — CAWC NSW{% endblock %}
+
+{% block content %}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[580px] px-5 py-24 text-center sm:px-6">
+        <div class="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[var(--cawc-green)]">
+            <svg class="h-8 w-8 text-white" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </div>
+        <h1 class="text-[2rem] font-black tracking-[-0.04em] text-[var(--cawc-heading)]">
+            Thank you for your donation!
+        </h1>
+        <p class="mt-4 text-[17px] leading-[1.65] text-[var(--cawc-copy)]">
+            Your contribution helps CAWC NSW deliver community programs, support families, and strengthen our
+            Cambodian community across New South Wales.
+        </p>
+        <a href="/"
+           class="mt-8 inline-flex h-[48px] items-center justify-center rounded-full bg-[var(--cawc-green)] px-8 text-[14px] font-semibold text-white transition hover:bg-[var(--cawc-green-strong)]">
+            Back to home
+        </a>
+    </div>
+</section>
+{% endblock %}

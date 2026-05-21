@@ -1,0 +1,318 @@
+{% extends "base.html" %}
+{% load wagtailcore_tags wagtailimages_tags %}
+
+{% block title %}{{ page.title }} | CAWC NSW{% endblock %}
+{% block og_title %}{{ page.title }} — CAWC NSW{% endblock %}
+{% block og_description %}{{ page.summary_display }}{% endblock %}
+
+{% block content %}
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 1. HERO                                                                      #}
+{# Dark gradient. Category eyebrow, title, summary, logistics pills.           #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[linear-gradient(160deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-20 pt-14 sm:px-6 sm:pb-24 lg:px-8 lg:pb-32 lg:pt-20">
+
+        <div class="max-w-[780px]">
+            <p class="cawc-eyebrow-light">
+                {{ page.category_display }}
+            </p>
+            <h1 class="mt-4 text-[2.3rem] font-black leading-[1.0] tracking-[-0.04em] text-white sm:text-[3.2rem] lg:text-[3.8rem]">
+                {{ page.title }}
+            </h1>
+            {% if page.summary_display %}
+                <p class="mt-6 text-[18px] leading-[1.75] text-white/75 max-w-[660px]">
+                    {{ page.summary_display }}
+                </p>
+            {% endif %}
+        </div>
+
+        {# Logistics pills #}
+        <div class="mt-8 flex flex-wrap gap-3">
+            {% if page.event_date %}
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/[0.1] px-4 py-2 text-[13px] font-semibold text-white/90">
+                    <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    {{ page.event_date|date:"l, j F Y" }}{% if page.end_date %} – {{ page.end_date|date:"j F Y" }}{% endif %}
+                </span>
+            {% else %}
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/[0.1] px-4 py-2 text-[13px] font-semibold text-white/90">
+                    Date TBC
+                </span>
+            {% endif %}
+            {% if page.event_time %}
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/[0.1] px-4 py-2 text-[13px] font-semibold text-white/90">
+                    <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    {{ page.event_time }}
+                </span>
+            {% endif %}
+            {% if page.cost %}
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/[0.1] px-4 py-2 text-[13px] font-semibold text-white/90">
+                    <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    {{ page.cost }}
+                </span>
+            {% endif %}
+            {% if page.language %}
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/[0.1] px-4 py-2 text-[13px] font-semibold text-white/90">
+                    <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z" stroke="currentColor" stroke-width="1.8"/>
+                        <path d="M3.6 9h16.8M3.6 15h16.8M12 3c-2.5 3.5-2.5 14.5 0 18M12 3c2.5 3.5 2.5 14.5 0 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                    </svg>
+                    {{ page.language }}
+                </span>
+            {% endif %}
+        </div>
+
+    </div>
+</section>
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 2. FEATURED IMAGE — overlapping feature card                                 #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{% if page.featured_image %}
+<div class="relative -mt-12 pb-8 sm:-mt-16 sm:pb-10 lg:-mt-24 lg:pb-12">
+    <div class="mx-auto w-full max-w-[1080px] px-5 sm:px-6 lg:px-8">
+        <figure class="overflow-hidden rounded-[28px] shadow-[0_30px_60px_-30px_rgba(15,41,34,0.40)]">
+            {% image page.featured_image width-1600 class="aspect-[16/9] w-full object-cover" %}
+        </figure>
+    </div>
+</div>
+{% endif %}
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 3. MOBILE QUICK INFO                                                          #}
+{# Shown below image on small screens. Hidden on lg+ where sidebar is visible. #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{% if page.event_date or page.has_logistics %}
+<div class="bg-[var(--cawc-surface)] lg:hidden">
+    <div class="mx-auto w-full max-w-[1180px] divide-y divide-[var(--cawc-border)]/20 px-5 sm:px-6">
+        {% if page.event_date or page.event_time %}
+            <div class="flex flex-wrap gap-x-8 gap-y-3 py-5">
+                {% if page.event_date %}
+                    <div>
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cawc-green)]">Date</p>
+                        <p class="mt-1 text-[14px] font-semibold text-[var(--cawc-heading)]">
+                            {{ page.event_date|date:"l, j F Y" }}{% if page.end_date %} – {{ page.end_date|date:"j F Y" }}{% endif %}
+                        </p>
+                    </div>
+                {% endif %}
+                {% if page.event_time %}
+                    <div>
+                        <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cawc-green)]">Time</p>
+                        <p class="mt-1 text-[14px] font-semibold text-[var(--cawc-heading)]">{{ page.event_time }}</p>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+        {% if page.venue %}
+            <div class="py-5">
+                <p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--cawc-green)]">Location</p>
+                <p class="mt-1 text-[14px] font-semibold text-[var(--cawc-heading)]">{{ page.venue }}</p>
+                {% if page.address %}
+                    <p class="mt-0.5 text-[13px] text-[var(--cawc-copy)]">{{ page.address }}</p>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 4. BODY + SIDEBAR                                                             #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 pb-14 sm:px-6 lg:px-8 lg:pb-16 {% if page.featured_image %}pt-4 lg:pt-6{% else %}pt-14 lg:pt-16{% endif %}">
+        <div class="gap-12 lg:grid lg:grid-cols-[1fr_320px]">
+
+            {# ── Main content ─────────────────────────────────────────────── #}
+            <div class="min-w-0">
+                {% if page.body %}
+                    <div class="text-[16px] leading-[1.85] text-[var(--cawc-copy)]
+                                [&_p]:mb-5 [&_p:last-child]:mb-0
+                                [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:text-[1.3rem] [&_h2]:font-bold [&_h2]:text-[var(--cawc-heading)]
+                                [&_h3]:mt-6 [&_h3]:mb-2 [&_h3]:text-[1.1rem] [&_h3]:font-bold [&_h3]:text-[var(--cawc-heading)]
+                                [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mb-4 [&_ul]:space-y-1
+                                [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:mb-4
+                                [&_a]:text-[var(--cawc-green)] [&_a]:underline [&_a:hover]:text-[var(--cawc-green-strong)]
+                                [&_strong]:text-[var(--cawc-heading)] [&_strong]:font-semibold">
+                        {{ page.body|richtext }}
+                    </div>
+                {% else %}
+                    <div class="rounded-2xl bg-[var(--cawc-surface-soft)] px-8 py-10 text-center">
+                        <p class="text-[15px] text-[var(--cawc-copy)]">Full event details will be added here.</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            {# ── Sidebar ──────────────────────────────────────────────────── #}
+            <aside class="mt-10 space-y-4 lg:mt-0">
+
+                {# Date & Time — desktop only (mobile version is above body) #}
+                {% if page.event_date or page.event_time %}
+                    <div class="hidden rounded-2xl bg-[var(--cawc-surface)] px-6 py-6 shadow-[0_8px_24px_rgba(23,57,45,0.07)] lg:block">
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--cawc-green)]">Date &amp; Time</p>
+                        <div class="mt-4 space-y-4">
+                            {% if page.event_date %}
+                                <div class="flex items-start gap-3">
+                                    <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--cawc-surface-soft)]">
+                                        <svg class="h-4 w-4 text-[var(--cawc-green)]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <rect x="3" y="4" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.8"/>
+                                            <path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--cawc-copy)]">Date</p>
+                                        <p class="mt-0.5 text-[14px] font-semibold text-[var(--cawc-heading)]">
+                                            {{ page.event_date|date:"l, j F Y" }}{% if page.end_date %} – {{ page.end_date|date:"j F Y" }}{% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            {% if page.event_time %}
+                                <div class="flex items-start gap-3">
+                                    <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--cawc-surface-soft)]">
+                                        <svg class="h-4 w-4 text-[var(--cawc-green)]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                            <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/>
+                                            <path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--cawc-copy)]">Time</p>
+                                        <p class="mt-0.5 text-[14px] font-semibold text-[var(--cawc-heading)]">{{ page.event_time }}</p>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# Venue — desktop only #}
+                {% if page.venue %}
+                    <div class="hidden rounded-2xl bg-[var(--cawc-surface)] px-6 py-6 shadow-[0_8px_24px_rgba(23,57,45,0.07)] lg:block">
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--cawc-green)]">Location</p>
+                        <div class="mt-3 flex items-start gap-3">
+                            <div class="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-[var(--cawc-surface-soft)]">
+                                <svg class="h-4 w-4 text-[var(--cawc-green)]" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M12 21s-7-6.75-7-11a7 7 0 1 1 14 0c0 4.25-7 11-7 11Z" stroke="currentColor" stroke-width="1.8"/>
+                                    <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.8"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="text-[14px] font-semibold text-[var(--cawc-heading)]">{{ page.venue }}</p>
+                                {% if page.address %}
+                                    <p class="mt-0.5 text-[13px] leading-[1.6] text-[var(--cawc-copy)]">{{ page.address }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {# Registration CTA — prominent green card #}
+                {% if page.has_registration %}
+                    <div class="rounded-2xl bg-[linear-gradient(135deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)] px-6 py-7">
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[rgba(176,205,194,0.82)]">Attend This Event</p>
+                        <h3 class="mt-2 text-[1.1rem] font-bold leading-tight text-white">Ready to join us?</h3>
+                        <p class="mt-2 text-[13px] leading-[1.65] text-white/65">
+                            {% if page.cost %}{{ page.cost }}.{% endif %}
+                            {% if page.language %}Delivered in {{ page.language }}.{% endif %}
+                            Register below or contact us if you have questions.
+                        </p>
+                        <a href="{{ page.registration_cta.link }}"
+                           target="_blank" rel="noopener"
+                           class="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-white text-[13px] font-semibold text-[var(--cawc-green)] transition hover:bg-[#f0f5f2]">
+                            {{ page.registration_cta.text }}
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="rounded-2xl bg-[linear-gradient(135deg,var(--cawc-green-deep)_0%,var(--cawc-green-deepest)_100%)] px-6 py-7">
+                        <p class="text-[11px] font-semibold uppercase tracking-[0.2em] text-[rgba(176,205,194,0.82)]">Interested?</p>
+                        <h3 class="mt-2 text-[1.1rem] font-bold leading-tight text-white">Get in touch with us</h3>
+                        <p class="mt-2 text-[13px] leading-[1.65] text-white/65">
+                            Contact CAWC NSW to express your interest, ask about registration, or find out more.
+                        </p>
+                        <a href="/contact/"
+                           class="mt-5 inline-flex h-11 w-full items-center justify-center rounded-full bg-white text-[13px] font-semibold text-[var(--cawc-green)] transition hover:bg-[#f0f5f2]">
+                            Contact Us
+                        </a>
+                    </div>
+                {% endif %}
+
+                {# Back to all events #}
+                <a href="{{ page.get_parent.url }}"
+                   class="flex items-center gap-2 rounded-2xl bg-[var(--cawc-surface)] px-5 py-4 text-[13px] font-semibold text-[var(--cawc-green)] shadow-[0_8px_24px_rgba(23,57,45,0.07)] transition hover:shadow-[0_12px_32px_rgba(23,57,45,0.12)]">
+                    <svg class="h-4 w-4 rotate-180" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    All Events
+                </a>
+
+            </aside>
+        </div>
+    </div>
+</section>
+
+
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 5. OTHER UPCOMING EVENTS                                                     #}
+{# Siblings that are upcoming, excluding this page.                           #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{% with siblings=page.get_siblings.live.public.specific %}
+    {% if siblings %}
+        <section class="bg-[var(--cawc-surface-soft)]">
+            <div class="mx-auto w-full max-w-[1180px] px-5 py-14 sm:px-6 lg:px-8 lg:py-16">
+
+                <div class="mb-8 flex items-end justify-between gap-4">
+                    <div>
+                        <p class="cawc-eyebrow">What's On</p>
+                        <h2 class="mt-2 text-[1.7rem] font-black tracking-[-0.03em] text-[var(--cawc-heading)]">More Community Events</h2>
+                    </div>
+                    <a href="{{ page.get_parent.url }}" class="shrink-0 text-[13px] font-semibold text-[var(--cawc-green)] transition hover:opacity-60">
+                        View all →
+                    </a>
+                </div>
+
+                <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                    {% for sibling in siblings %}
+                        {% if sibling.pk != page.pk %}
+                            <a href="{{ sibling.url }}"
+                               class="cawc-card-hover group flex flex-col overflow-hidden rounded-[28px] bg-[var(--cawc-surface)] shadow-[0_8px_24px_rgba(23,57,45,0.07)] no-underline">
+                                <div class="relative h-[180px] shrink-0 overflow-hidden bg-[linear-gradient(135deg,#1a3d32_0%,#0f2922_100%)]">
+                                    {% if sibling.featured_image %}
+                                        {% image sibling.featured_image width-640 class="h-full w-full object-cover transition duration-500 group-hover:scale-105" %}
+                                    {% endif %}
+                                    {% if sibling.event_date %}
+                                        <div class="absolute left-4 top-4 rounded-[12px] bg-white/95 px-3 py-1.5 text-center shadow-sm">
+                                            <p class="text-[9px] font-semibold uppercase tracking-[0.16em] text-[var(--cawc-green)]">{{ sibling.event_date|date:"M" }}</p>
+                                            <p class="text-[20px] font-black leading-none tracking-[-0.03em] text-[var(--cawc-heading)]">{{ sibling.event_date|date:"d" }}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="flex flex-1 flex-col p-5">
+                                    <p class="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--cawc-green)]">{{ sibling.category_display }}</p>
+                                    <h3 class="mt-2 text-[16px] font-bold leading-snug text-[var(--cawc-heading)] transition group-hover:text-[var(--cawc-green)]">{{ sibling.title }}</h3>
+                                    {% if sibling.venue %}
+                                        <p class="mt-2 text-[12px] text-[var(--cawc-copy)]">{{ sibling.venue }}</p>
+                                    {% endif %}
+                                </div>
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+{% endwith %}
+
+{% endblock %}
