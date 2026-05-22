@@ -1,9 +1,10 @@
 {% load static about_tags i18n %}
 {% get_current_language as LANGUAGE_CODE %}
 {% get_site_nav_pages as nav_pages %}
+{% get_nav_extra_urls as nav_urls %}
 {% locale_prefix as lp %}
 
-<header class="sticky top-0 z-50 bg-white border-b border-[#e4e8e4] shadow-[0_1px_6px_rgba(15,41,34,0.06)]">
+<header lang="en" class="sticky top-0 z-50 bg-white border-b border-[#e4e8e4] shadow-[0_1px_6px_rgba(15,41,34,0.06)]">
     <div class="mx-auto flex h-[72px] w-full max-w-[1280px] items-center px-7 gap-0">
 
         {# ── Logo ── #}
@@ -21,13 +22,13 @@
         <nav class="ml-6 hidden h-full items-center gap-0.5 xl:flex" aria-label="Main navigation">
 
             {% for nav_page in nav_pages %}
-                {% with children=nav_page.get_children.live.public %}
+                {% with children=nav_page.nav_children %}
                     {% if nav_page.slug != "resources" and nav_page.slug != "impact" %}
 
                         {% if children %}
                             <div class="cawc-has-dropdown">
-                                <a href="{{ lp }}{{ nav_page.url }}"
-                                   class="cawc-nav-link{% if nav_page.url in request.path %} cawc-nav-link-active{% endif %}">
+                                <a href="{{ nav_page.resolved_url }}"
+                                   class="cawc-nav-link{% if nav_page.resolved_url in request.path %} cawc-nav-link-active{% endif %}">
                                     {% if nav_page.title == "Programs" %}What We Do{% else %}{{ nav_page.title }}{% endif %}
                                     <svg class="cawc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                                         <path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -35,20 +36,20 @@
                                 </a>
                                 <div class="cawc-dropdown-panel">
                                     <div class="cawc-dropdown-inner">
-                                        <a href="{{ lp }}{{ nav_page.url }}" class="cawc-dropdown-label">
+                                        <a href="{{ nav_page.resolved_url }}" class="cawc-dropdown-label">
                                             {% if nav_page.title == "Programs" %}All Programs{% else %}Overview{% endif %}
                                         </a>
                                         <div class="cawc-dropdown-divider"></div>
                                         {% for child in children %}
-                                            <a href="{{ lp }}{{ child.url }}">{{ child.title }}</a>
+                                            <a href="{{ child.resolved_url }}">{{ child.title }}</a>
                                         {% endfor %}
                                     </div>
                                 </div>
                             </div>
 
                         {% else %}
-                            <a href="{{ lp }}{{ nav_page.url }}"
-                               class="cawc-nav-link{% if nav_page.url in request.path %} cawc-nav-link-active{% endif %}">
+                            <a href="{{ nav_page.resolved_url }}"
+                               class="cawc-nav-link{% if nav_page.resolved_url in request.path %} cawc-nav-link-active{% endif %}">
                                 {% if nav_page.title == "Programs" %}What We Do{% else %}{{ nav_page.title }}{% endif %}
                             </a>
                         {% endif %}
@@ -57,20 +58,20 @@
                 {% endwith %}
             {% endfor %}
 
-            <a href="{{ lp }}/impact/"
+            <a href="{{ nav_urls.impact }}"
                class="cawc-nav-link{% if '/impact' in request.path %} cawc-nav-link-active{% endif %}">
                 Impact
             </a>
-            <a href="{{ lp }}/resources/"
+            <a href="{{ nav_urls.resources }}"
                class="cawc-nav-link{% if '/resources' in request.path %} cawc-nav-link-active{% endif %}">
                 Resources
             </a>
-            <a href="{{ lp }}/contact/"
+            <a href="{{ nav_urls.contact }}"
                class="cawc-nav-link{% if '/contact' in request.path %} cawc-nav-link-active{% endif %}">
                 Contact
             </a>
             <div class="cawc-has-dropdown">
-                <a href="{{ lp }}/gallery/"
+                <a href="{{ nav_urls.gallery }}"
                    class="cawc-nav-link{% if '/gallery' in request.path %} cawc-nav-link-active{% endif %}">
                     Gallery
                     <svg class="cawc-chevron" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -79,7 +80,7 @@
                 </a>
                 <div class="cawc-dropdown-panel">
                     <div class="cawc-dropdown-inner">
-                        <a href="{{ lp }}/gallery/" class="cawc-dropdown-label">All Photos</a>
+                        <a href="{{ nav_urls.gallery }}" class="cawc-dropdown-label">All Photos</a>
                         <div class="cawc-dropdown-divider"></div>
                         <a href="{{ lp }}/gallery/community/">Community Photos</a>
                         <a href="{{ lp }}/gallery/programs/">Program Photos</a>
@@ -168,7 +169,7 @@
                 <a href="{% if LANGUAGE_CODE == 'km' %}/km/{% else %}/{% endif %}" class="cawc-mobile-link">{% if LANGUAGE_CODE == 'km' %}ទំព័រដើម{% else %}Home{% endif %}</a>
 
                 {% for nav_page in nav_pages %}
-                    {% with children=nav_page.get_children.live.public %}
+                    {% with children=nav_page.nav_children %}
                         {% if nav_page.slug != "resources" and nav_page.slug != "impact" %}
                             {% if children %}
                                 <details>
@@ -179,12 +180,12 @@
                                         </svg>
                                     </summary>
                                     <div class="ml-4 mt-0.5 border-l-2 border-[#eef5f1] pb-1.5 pl-3">
-                                        <a href="{{ lp }}{{ nav_page.url }}"
+                                        <a href="{{ nav_page.resolved_url }}"
                                            class="block py-1.5 text-[10.5px] font-bold uppercase tracking-[0.13em] text-[#1E6F56]">
                                             {% if nav_page.title == "Programs" %}All Programs{% else %}Overview{% endif %}
                                         </a>
                                         {% for child in children %}
-                                            <a href="{{ lp }}{{ child.url }}" class="cawc-mobile-link"
+                                            <a href="{{ child.resolved_url }}" class="cawc-mobile-link"
                                                style="font-size:12.5px;font-weight:500;color:#4f6360;padding:6px 8px;">
                                                 {{ child.title }}
                                             </a>
@@ -192,7 +193,7 @@
                                     </div>
                                 </details>
                             {% else %}
-                                <a href="{{ lp }}{{ nav_page.url }}" class="cawc-mobile-link">
+                                <a href="{{ nav_page.resolved_url }}" class="cawc-mobile-link">
                                     {% if nav_page.title == "Programs" %}What We Do{% else %}{{ nav_page.title }}{% endif %}
                                 </a>
                             {% endif %}
@@ -200,9 +201,9 @@
                     {% endwith %}
                 {% endfor %}
 
-                <a href="{{ lp }}/impact/"    class="cawc-mobile-link">Impact</a>
-                <a href="{{ lp }}/resources/" class="cawc-mobile-link">Resources</a>
-                <a href="{{ lp }}/contact/"   class="cawc-mobile-link">Contact</a>
+                <a href="{{ nav_urls.impact }}"    class="cawc-mobile-link">Impact</a>
+                <a href="{{ nav_urls.resources }}" class="cawc-mobile-link">Resources</a>
+                <a href="{{ nav_urls.contact }}"   class="cawc-mobile-link">Contact</a>
                 <details>
                     <summary class="cawc-mobile-link">
                         Gallery
@@ -211,7 +212,7 @@
                         </svg>
                     </summary>
                     <div class="ml-4 mt-0.5 border-l-2 border-[#eef5f1] pb-1.5 pl-3">
-                        <a href="{{ lp }}/gallery/" class="block py-1.5 text-[10.5px] font-bold uppercase tracking-[0.13em] text-[#1E6F56]">
+                        <a href="{{ nav_urls.gallery }}" class="block py-1.5 text-[10.5px] font-bold uppercase tracking-[0.13em] text-[#1E6F56]">
                             All Photos
                         </a>
                         <a href="{{ lp }}/gallery/community/" class="cawc-mobile-link" style="font-size:12.5px;font-weight:500;color:#4f6360;padding:6px 8px;">

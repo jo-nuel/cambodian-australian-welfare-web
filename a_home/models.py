@@ -34,6 +34,15 @@ class StatCardBlock(blocks.StructBlock):
     )
 
 
+class PartnerLogoBlock(blocks.StructBlock):
+    name = blocks.CharBlock(help_text='Partner or funder organisation name.')
+    logo = ImageChooserBlock()
+    url = blocks.URLBlock(required=False, help_text='Optional website link for this partner.')
+
+    class Meta:
+        icon = 'image'
+
+
 class SupportCardBlock(blocks.StructBlock):
     """Legacy block — kept so existing page data is not lost."""
     icon_label = blocks.CharBlock(required=False, max_length=12)
@@ -154,6 +163,15 @@ class HomePage(Page):
         ('image', ImageChooserBlock()),
     ], blank=True, use_json_field=True)
 
+    # ── Partners & Supporters ─────────────────────────────────────────────────
+    show_partners = models.BooleanField(
+        default=False,
+        help_text='Tick to show the Partners & Supporters section on the homepage.',
+    )
+    partners_logos = StreamField([
+        ('partner', PartnerLogoBlock()),
+    ], blank=True, use_json_field=True)
+
     # ── Legacy / fallback ─────────────────────────────────────────────────────
     support_cards = StreamField([
         ('card', SupportCardBlock()),
@@ -231,6 +249,15 @@ class HomePage(Page):
             HelpPanel('These photos rotate automatically in the large image on the right side of the homepage hero. Add at least one photo. Landscape images work best — minimum 1 800 px wide, JPEG or PNG format.'),
             FieldPanel('photo_strip'),
         ], heading='Hero Photo Display'),
+        MultiFieldPanel([
+            HelpPanel(
+                'This section is <strong>hidden by default</strong>. Tick "Show partners section" '
+                'and add logos below to make it visible on the homepage. Only enable this once '
+                'CAWC has written permission to display each organisation\'s logo.'
+            ),
+            FieldPanel('show_partners'),
+            FieldPanel('partners_logos'),
+        ], heading='Partners & Supporters'),
     ]
 
     # ── Utility ───────────────────────────────────────────────────────────────

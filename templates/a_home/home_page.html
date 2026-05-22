@@ -538,6 +538,41 @@
     </div>
 </section>
 
+
+{% if page.show_partners and page.partners_logos %}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+{# 11. PARTNERS & SUPPORTERS                                                   #}
+{# Hidden unless "Show partners section" is ticked in Wagtail.                #}
+{# ═══════════════════════════════════════════════════════════════════════════ #}
+<section class="bg-[var(--cawc-bg)]">
+    <div class="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-6 lg:px-8 lg:py-20">
+        <div class="mb-10 text-center">
+            <p class="cawc-eyebrow">Partners &amp; Supporters</p>
+            <h2 class="mt-3 text-[1.7rem] font-black tracking-[-0.03em] text-[var(--cawc-heading)]">
+                Organisations that support our work
+            </h2>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-8 sm:gap-12">
+            {% for block in page.partners_logos %}
+                {% with partner=block.value %}
+                    {% if partner.url %}
+                        <a href="{{ partner.url }}" target="_blank" rel="noopener noreferrer"
+                           class="flex items-center justify-center opacity-70 grayscale transition hover:opacity-100 hover:grayscale-0"
+                           title="{{ partner.name }}">
+                            {% image partner.logo max-180x80 class="h-14 w-auto object-contain" %}
+                        </a>
+                    {% else %}
+                        <div class="flex items-center justify-center opacity-70 grayscale" title="{{ partner.name }}">
+                            {% image partner.logo max-180x80 class="h-14 w-auto object-contain" %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
 {% endblock %}
 
 {% block extra_scripts %}
